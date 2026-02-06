@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول تناوبی تعاملی عناصر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- فونت فارسی وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- کتابخانه KaTeX برای فرمول‌نویسی ریاضی -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --accent: #2563eb;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --drawer-bg: #ffffff;
+            --info-bg: #f9fafb;
+            --hover-shadow: rgba(0,0,0,0.1);
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-main: #ffffff;
+                --text-secondary: #aaaaaa;
+                --border-color: #333;
+                --accent: #3b82f6;
+                --header-bg: rgba(30, 30, 30, 0.9);
+                --drawer-bg: #18181b;
+                --info-bg: #27272a;
+                --hover-shadow: rgba(255,255,255,0.1);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Vazirmatn', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-white {
+            color: #ffffff !important;
+        }
+        ul, ol {
+            margin: 0.5em 0 !important;
+        }
+        ul li::marker, ol li::marker {
+            color: #15803d; /* سبز تیره */
+            font-weight: bold;
+        }
+        ul li, ol li {
+            margin-bottom: 0.3em;
+            padding-right: 1rem;
+        }
+        ul li ul, ol li ol {
+            margin-top: 0.3em;
+            margin-bottom: 0.3em;
+        }
+        .ai-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem; }
+        .ai-table th, .ai-table td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: right; }
+        .ai-table th { background-color: #f3f4f6; font-weight: bold; }
+        .ai-table tr:nth-child(even) { background-color: #f9fafb; }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-mode {
+            background: var(--card-bg);
+            font-family: 'Vazirmatn', sans-serif;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-mode:hover, .btn-mode.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .table-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px;
+            display: flex;
+        }
+
+        .periodic-table {
+            display: grid;
+            grid-template-columns: 30px repeat(18, 70px); 
+            grid-template-rows: 30px repeat(9, 70px);
+            gap: 6px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .periodic-table.highlight-mode .element {
+            opacity: 0.5 !important;
+            filter: grayscale(0.8);
+            transition: all 0.1s ease-in-out;
+        }
+
+        .periodic-table.highlight-mode .element.highlight {
+            opacity: 1 !important;
+            filter: grayscale(0);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--hover-shadow);
+            z-index: 50;
+            transition: all 0.1s ease-in-out;
+        }
+
+        .legend-item {
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+        }
+
+        .legend-item:hover {
+            background: var(--info-bg);
+            transform: translateY(-2px);
+        }
+
+        /* استایل شماره‌های گروه و دوره */
+        .grid-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .element {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            overflow: hidden;
+            user-select: none;
+            color: var(--text-main);
+        }
+
+        .element:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 0 15px var(--hover-shadow);
+            border-color: var(--accent);
+        }
+
+        .bohr-element:hover {
+            transform: scale(2.1);
+        }
+        .image-element:hover {
+            transform: scale(1.5);
+        }
+
+        .element .radioactive {
+            position: absolute;
+            bottom: 1.25px;
+            right: 1.25px;
+            font-size: 0.675rem;
+            color: #f43f5e; /* سرخابی یا قرمز */
+        }
+
+        .radioactive-big {
+            position: absolute;
+            bottom: 6px;
+            right: 9px;
+            font-size: 1.8rem;
+            color: #f43f5e;
+        }
+
+        .atomic-number {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+        .symbol {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .name {
+            font-size: 0.6rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+            margin-top: -5px;
+        }
+        .mass {
+            font-size: 0.55rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .img-symbol {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+
+        /* استایل‌های محتوای حالت‌های مختلف */
+        .bohr-view, .image-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .orbital-view {
+            font-size: 0.6rem;
+            text-align: center;
+            line-height: 1.2;
+            padding: 2px;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .orbital-view strong {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        /* Drawer Styles */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(2px);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .drawer-overlay.active { opacity: 1; visibility: visible; }
+
+        .drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 86.5vh;
+            background: var(--drawer-bg);
+            border-top: 1px solid var(--border-color);
+            border-radius: 30px 30px 0 0;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            color: var(--text-main);
+        }
+        .drawer.active { transform: translateY(0); box-shadow: 0 -5px 30px rgba(0,0,0,0.7); }
+
+        .drawer-header {
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .drawer-content {
+            padding: 25px;
+            overflow-y: auto;
+            gap: 30px;
+            align-content: flex-start;
+        }
+
+        .drawer-top-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .element-big-card {
+            width: 260px;
+            height: 280px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .big-number {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+        .big-symbol {
+            font-size: 6rem;
+            font-weight: 800;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .big-name { font-size: 2rem; margin-top: -10px; }
+
+        .details-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-section { flex: 1; min-width: 300px; }
+
+        /* استایل اختصاصی برای بخش مدل بور و اطلاعات مداری */
+        .bohr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--info-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            width: 260px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            flex-shrink: 0;
+        }
+        .bohr-canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        #bohrCanvas {
+            max-width: 100%;
+            height: auto;
+        }
+        #orbitInfo {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+            direction: rtl;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: var(--info-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .info-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        .info-value { font-size: 1rem; overflow-x: auto; overflow-y: hidden; }
+        
+        .katex-display { margin-left: auto; margin-right: auto; direction: ltr; }
+        span.katex { direction: ltr; display: inline-block; }
+
+        .description-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            padding: 25px;
+            text-align: justify;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            padding: 10px;
+            max-width: 1200px;
+            margin: 10px auto;
+        }
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--card-bg);
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            column-gap: 6px;
+        }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; margin-left: 6px; }
+
+        @media (max-width: 600px) {
+            .drawer-content { align-items: center; flex-wrap: wrap; }
+            .info-section { width: 100%; }
+            .element-big-card { width: 100%; }
+            .bohr-container { width: 100%; }
+        }
+        @media (min-width: 600px) {
+            .drawer-content { display: flex; }
+        }
+        @media (prefers-color-scheme: dark) {
+            .ai-table th, .ai-table td { 
+            	border: 1px solid #415c3b; /* خطوط روشن‌تر */
+            }
+            .ai-table th { 
+            	background-color: #3c5736ab; 
+            }
+            .ai-table tr:nth-child(even) { 
+            	background-color: #3e493b8f; 
+            }
+            .ai-table tr:nth-child(odd) { 
+            	background-color: #222b2394; /* یا رنگ اصلی بدنه */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>جدول تناوبی تعاملی عناصر</h1>
+        <div class="controls">
+            <button class="btn-mode active" onclick="setMode('standard')">استاندارد</button>
+            <button class="btn-mode" onclick="setMode('block')">بلوک</button>
+            <button class="btn-mode" onclick="setMode('bohr')">مدل بور</button>
+            <button class="btn-mode" onclick="setMode('orbital')">آرایش اوربیتالی</button>
+            <button class="btn-mode" onclick="setMode('phase')">حالت ماده</button>
+            <button class="btn-mode" onclick="setMode('image')">تصویری</button>
+        </div>
+    </header>
+
+    <div class="table-scroll-container">
+        <div class="periodic-table" id="periodicTable" dir="ltr"></div>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <!-- پنل کشویی (Drawer) -->
+    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h2 id="drawerTitle">جزئیات عنصر</h2>
+            <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        </div>
+        <div style="overflow-y: auto;" id="drawerContent"></div>
+    </div>
+
+    <script>
+        const colorPalette = {
+            'alkali-metal': '#ff0c0c',      // قرمز
+            'alkaline-earth': '#f97316',    // نارنجی
+            'transition-metal': '#eab308',  // زرد
+            'post-transition': '#84cc16',   // سبز لیمویی
+            'metalloid': '#10b981',         // سبز
+            'non-metal': '#00b1db',         // فیروزه‌ای
+            'halogen': '#326aed',           // آبی
+            'noble-gas': '#8b5cf6',         // بنفش
+            'lanthanide': '#d946ef',        // صورتی
+            'actinide': '#ff314b',          // سرخابی
+        };
+        const blockColors = {
+            's': '#ef4444',
+            'p': '#eab308',
+            'd': '#3b82f6',
+            'f': '#10b981'
+        };
+
+        const categoryNames = {
+            'alkali-metal': 'فلزات قلیایی',
+            'alkaline-earth': 'فلزات قلیایی خاکی',
+            'transition-metal': 'فلزات واسطه',
+            'post-transition': 'فلزات پس‌واسطه',
+            'metalloid': 'شبه‌فلزات',
+            'non-metal': 'نافلزات',
+            'halogen': 'هالوژن‌ها',
+            'noble-gas': 'گازهای نجیب',
+            'lanthanide': 'لانتانیدها',
+            'actinide': 'آکتینیدها',
+        };
+
+        // --- الگوریتم دقیق آرایش الکترونی (Aufbau Principle) ---
+        // Order: 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d, 5p, 6s, 4f, 5d, 6p, 7s, 5f, 6d, 7p
+        const aufbauOrder = [
+            {n:1, t:'s', c:2}, {n:2, t:'s', c:2}, {n:2, t:'p', c:6},
+            {n:3, t:'s', c:2}, {n:3, t:'p', c:6}, {n:4, t:'s', c:2},
+            {n:3, t:'d', c:10}, {n:4, t:'p', c:6}, {n:5, t:'s', c:2},
+            {n:4, t:'d', c:10}, {n:5, t:'p', c:6}, {n:6, t:'s', c:2},
+            {n:4, t:'f', c:14}, {n:5, t:'d', c:10}, {n:6, t:'p', c:6},
+            {n:7, t:'s', c:2}, {n:5, t:'f', c:14}, {n:6, t:'d', c:10}, {n:7, t:'p', c:6}
+        ];
+
+        function calculateElectronConfig(Z) {
+            const exceptions = {
+                24: "1s2 2s2 2p6 3s2 3p6 4s1 3d5",
+                29: "1s2 2s2 2p6 3s2 3p6 4s1 3d10",
+                41: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s1 4d4",
+                42: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s1 4d5",
+                44: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s1 4d7",
+                45: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s1 4d8",
+                46: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 4d10",
+                47: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s1 4d10",
+                78: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s2 4d10 5p6 6s1 4f14 5d9",
+                79: "1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s2 4d10 5p6 6s1 4f14 5d10"
+            };
+
+            if (exceptions[Z]) return parseConfigString(exceptions[Z]);
+
+            let electrons = Z;
+            let config = [];
+
+            for (let orb of aufbauOrder) {
+                if (electrons <= 0) break;
+                let fill = Math.min(electrons, orb.c);
+                config.push({
+                    n: orb.n,
+                    type: orb.t,
+                    count: fill
+                });
+                electrons -= fill;
+            }
+            return config;
+        }
+
+
+        function parseConfigString(str) {
+            return str.split(' ').map(part => {
+                let match = part.match(/(\d+)([spdf])(\d+)/);
+                if (match) {
+                    return { name: part.slice(0, match[0].length-match[3].length), n: parseInt(match[1]), type: match[2], count: parseInt(match[3]) };
+                }
+                // fallback simple parser
+                let name = part.slice(0, 2);
+                let count = parseInt(part.slice(2));
+                return { name, count, n: parseInt(name[0]), type: name[1] };
+            });
+        }
+
+        function getLatexElectronConfig(Z) {
+            const nobleGases = [
+                { Z: 2, sym: 'He' },
+                { Z: 10, sym: 'Ne' },
+                { Z: 18, sym: 'Ar' },
+                { Z: 36, sym: 'Kr' },
+                { Z: 54, sym: 'Xe' },
+                { Z: 86, sym: 'Rn' }
+            ];
+
+            let noble = null;
+            for (let ng of nobleGases) {
+                if (Z > ng.Z) noble = ng;
+            }
+
+            const full = calculateElectronConfig(Z);
+
+            if (!noble) {
+                return full.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+            }
+
+            const core = calculateElectronConfig(noble.Z);
+
+            // حذف اوربیتال‌های هسته به‌صورت ساختاری
+            let valence = full.slice(core.length);
+
+            return `[\\mathrm{${noble.sym}}]\\,` +
+                valence.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+        }
+
+        function orbitalTable(Z) {
+            const nobleGases = [{ Z: 2, sym: 'He' },{ Z: 10, sym: 'Ne' },{ Z: 18, sym: 'Ar' },{ Z: 36, sym: 'Kr' },{ Z: 54, sym: 'Xe' },{ Z: 86, sym: 'Rn' }];
+            let noble = null;
+            for (let ng of nobleGases) {
+                if (Z > ng.Z) noble = ng;
+            }
+            const full = calculateElectronConfig(Z);
+            if (!noble) {
+                return full.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+            }
+            const core = calculateElectronConfig(noble.Z);
+            let valence = full.slice(core.length);
+            const shouldShorten = 
+                (Z >= 31 && Z <= 36) || 
+                (Z >= 49 && Z <= 54) || 
+                (Z >= 71 && Z <= 86) || 
+                (Z >= 103 && Z <= 118);
+            let valenceLatex = "";
+            if (shouldShorten) {
+                const lastOrbital = valence[valence.length - 1];
+                valenceLatex = "\\dots\\," + `${lastOrbital.n}${lastOrbital.type}^{${lastOrbital.count}}`;
+            } else {
+                valenceLatex = `[\\mathrm{${noble.sym}}]\\,` + valence.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+            }
+            return valenceLatex;
+        }
+
+        const baseElements = [
+            { n : 1, s : 'H', m: '1.008', c: 'non-metal', st: 'gas', name: 'هیدروژن', nameEng: 'Hydrogen', density: '$0.089 \\frac{\\text{g}}{\\text{L}}$', mp: '$-259^{\\circ}\\text{C}$', bp: '$-252^{\\circ}\\text{C}$', istops: 'پروتیوم (هیدروژن معمولی): $^{1}_{1}\\mathrm{H}$،<br> دوتریوم: $^{2}_{1}\\mathrm{H}$ یا $\\mathrm{D}$،<br> تریتیوم: $^{3}_{1}\\mathrm{H}$ یا $\\mathrm{T}$', RAtm: '$r_{\\text{covalent}}(\\mathrm{H}) \\approx 53\\text{pm}$', RvdW: '$r_{\\text{vdW}}(\\mathrm{H}) \\approx 120\\text{pm}$', elctrNeg: '2.20', OxN: '$+1$ و $-1$', alotrops: '$\\mathrm{H}_2$، $\\mathrm{H}_1$، $\\mathrm{H}_3^+$', discvrr: 'Henry Cavendish', discvrDate: '1766', naming: 'Antoine-Laurent de Lavoisier', block: 's', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Hydrogen_discharge_tube_cropped.jpg', 
+            d: `
+        <h2 class="text-2xl font-bold my-3">هیدروژن: سرآغاز هستی و سوخت آینده</h2>
+        <p>هیدروژن ($\\mathrm{H}$) نه‌تنها اولین و سبک‌ترین عنصر در جدول تناوبی است، بلکه به عنوان سنگ‌بنای ماده در جهان شناخته می‌شود. این عنصر که حدود ۱۳.۸ میلیارد سال پیش در جریان مهبانگ (Big Bang) پدید آمد، امروزه حدود $75\\%$ از جرم کل مواد باریونی کیهان را تشکیل می‌دهد. هیدروژن سوخت اصلی قلب ستارگان است که از طریق فرآیندهای گداخت، نور و گرمای لازم برای حیات را فراهم می‌کند.</p>
+        <h3 class="text-xl font-bold my-3">تاریخچۀ کشف</h3>
+        <p>اگرچه کیمیاگران از قرن‌ها پیش می‌دانستند که واکنش فلزات با اسیدها گازی اشتعال‌پذیر تولید می‌کند، اما اولین بار هنری کاوندیش در سال ۱۷۶۶ میلادی توانست هیدروژن را به عنوان یک ماده مجزا شناسایی کند. او نام آن را «هوای مشتعل» گذاشت. بعدها آنتوان لاووازیه نام آن را از ترکیب دو واژه یونانی <i>Hydro</i> (آب) و <i>Genes</i> (سازنده) به معنای «آب‌ساز» انتخاب کرد.</p>
+        <h3 class="text-xl font-bold my-3">اطلاعات بنیادین در جدول تناوبی</h3>
+        <div class="overflow-x-auto">
+            <table class="ai-table">
+                <thead>
+                    <tr>
+                        <th>ویژگی</th>
+                        <th>مقدار / توضیحات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>عدد اتمی ($Z$)</td><td>$1$</td></tr>
+                    <tr><td>جرم اتمی استاندارد</td><td>$1.008 \\text{ amu}$</td></tr>
+                    <tr><td>آرایش الکترونی</td><td>$1s^1$</td></tr>
+                    <tr><td>شعاع اتمی (وان‌دروالس)</td><td>$120 \\text{pm}$</td></tr>
+                    <tr><td>شعاع کووالانسی</td><td>$31 \\pm 5\\text{pm}$</td></tr>
+                    <tr><td>انرژی نخستین یونش</td><td>$1312.0 \\frac{\\text{kJ}}{\\text{mol}}$</td></tr>
+                    <tr><td>الکترونگاتیوی (مقیاس پاولینگ)</td><td>$2.20$</td></tr>
+                    <tr><td>نقطه ذوب</td><td>$-259.16 ^{\\circ}\\text{C}$</td></tr>
+                    <tr><td>نقطه جوش</td><td>$-252.87 ^{\\circ}\\text{C}$</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 class="text-xl font-bold my-3">ویژگی‌های فیزیکی و شیمیایی گسترده</h3>
+        <p>هیدروژن در شرایط استاندارد ($\\text{STP}$) به صورت مولکول‌های دواتمی ($\\mathrm{H}_2$) یافت می‌شود. پیوند بین دو اتم هیدروژن یکی از قوی‌ترین پیوندهای کووالانسی یگانه است ($\\mathrm{H{-}H}$).</p>
+        <img src="https://parshavayealborz.com/wp-content/uploads/2022/03/%D9%85%D9%88%D9%84%DA%A9%D9%88%D9%84-%D9%87%DB%8C%D8%AF%D8%B1%D9%88%DA%98%D9%86.jpg" alt="مولکول $H_2$" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">مولکول $\\mathrm{H}_2$</p>
+        <h3 class="text-xl font-bold my-3">فیزیک پلاسما و طیف نوری</h3>
+        <p>در دماهای بسیار بالا یا تحت ولتاژهای شدید، هیدروژن الکترون خود را از دست داده و به حالت پلاسما در می‌آید. انتقال الکترون بین ترازهای انرژی در اتم هیدروژن باعث ایجاد طیف نشری خطی می‌شود که با فرمول ریدبرگ محاسبه می‌گردد:$$\\frac{1}{\\lambda} = R_H \\left( \\frac{1}{n_1^2} - \\frac{1}{n_2^2} \\right)$$ در این فرمول، $R_H$ ثابت ریدبرگ برای هیدروژن است. خطوط مرئی این طیف (سری بالمر) شامل رنگ‌های قرمز ($n=3 \\to 2$)، آبی-سبز ($4 \\to 2$) و بنفش ($5 \\to 2$) است که در مجموع ظاهری صورتی‌رنگ به گاز درخشان می‌دهند.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Emission_spectrum-H.svg/2560px-Emission_spectrum-H.svg.png" alt="طیف نشری خطی هیدروژن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto">
+        <p class="text-sm text-center">طیف نشری خطی هیدروژن</p><br>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hydrogen_discharge_tube.jpg/2560px-Hydrogen_discharge_tube.jpg" alt="درخشش صورتی-بنفش هیدروژن در حالت پلاسما" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">درخشش صورتی-بنفش هیدروژن در حالت پلاسما</p>
+        <h3 class="text-xl font-bold my-3">ایزوتوپ‌ها و تفاوت‌های ساختاری </h3>
+        <p>هیدروژن تنها عنصری است که ایزوتوپ‌های آن به دلیل تفاوت فاحش در جرم، رفتارهای شیمیایی متفاوتی نشان می‌دهند (اثر ایزوتوپی):</p>
+        <ol style="list-style-type: persian;" class="list-inside">
+            <li>پروتیوم ($^1_1\\mathrm{H}$): فراوان‌ترین شکل هیدروژن ($99.98\\%$). هسته آن تنها از یک پروتون تشکیل شده است.</li>
+            <li>دوتریوم ($^2_1\\mathrm{H}$ یا $\\mathrm{D}$): معروف به هیدروژن سنگین. دارای یک پروتون و یک نوترون است. چگالی آب سنگین ($\\mathrm{D}_2\\mathrm{O}$) حدود $11\\%$ بیشتر از آب معمولی است و در رآکتورهای هسته‌ای به عنوان کندکننده نوترون عمل می‌کند.</li>
+            <li>تریتیوم ($^3_1\\mathrm{H}$ یا $\\mathrm{T}$): ایزوتوپ رادیواکتیو با نیمه‌عمر ۱۲.۳ سال. در هسته آن دو نوترون وجود دارد. از آن در نورافشان‌های ساعت و به عنوان سوخت در بمب‌های هیدروژنی استفاده می‌شود.</li>
+        </ol>
+        <h3 class="text-xl font-bold my-3">مکانیسم‌های تولید انرژی: گداخت هسته‌ای</h3>
+        <p>در مرکز ستارگان، فشار و دمای فوق‌العاده زیاد باعث می‌شود پروتون‌ها بر نیروی رانش الکترواستاتیکی غلبه کرده و با هم ادغام شوند. فرآیند اصلی، چرخه پروتون-پروتون است:</p>
+        <ol style="list-style-type: persian;" class="list-inside">
+            <li>دو پروتون با هم برخورد کرده و یک دوتریوم، یک پوزیترون و یک نوترینو تولید می‌کنند.</li>
+            <li>دوتریوم با پروتون دیگری برخورد کرده و هلیوم-۳ ($^3_2\\mathrm{He}$) تولید می‌کند.</li>
+            <li>نهایت، دو هسته هلیوم-۳ با هم برخورد کرده و هلیوم-۴ پایدار را می‌سازند.</li>
+        </ol>
+        <p>معادله کلی انرژی‌زا: $$4 \\ ^1_1\\mathrm{H} \\rightarrow \\ ^4_2\\mathrm{He} + 2e^+ + 2\\nu_e + 26.73 \\ \\text{MeV}$$ این انرژی معادل تبدیل بخشی از جرم به انرژی طبق فرمول معروف اینشتین ($E=mc^2$) است.</p>
+        <h3 class="text-xl font-bold my-3">کاربردها و نقش در اقتصاد آینده</h3>
+        <h4 class="text-lg font-semibold mt-4 mb-2">۱. اقتصاد هیدروژنی (سوخت پاک)</h4>
+        <p>هیدروژن به عنوان حامل انرژی در سلول‌های سوختی (Fuel Cells) استفاده می‌شود. در این سلول‌ها، واکنش شیمیایی مستقیماً به برق تبدیل شده و تنها خروجی آن بخار آب خالص است:$$2\\mathrm{H}_2(\\mathrm{g}) + \\mathrm{O}_2(\\mathrm{g}) \\rightarrow 2\\mathrm{H}_2\\mathrm{O}(\\mathrm{l}) + \\text{Energy}$$</p>
+        <h4 class="text-lg font-semibold mt-4 mb-2">۲. هیدروژنه کردن در صنایع غذایی</h4>
+        <p>برای تبدیل روغن‌های مایع گیاهی به چربی‌های جامد (مارگارین)، اتم‌های هیدروژن به پیوندهای دوگانه کربن-کربون اضافه می‌شوند.</p>
+        <h4 class="text-lg font-semibold mt-4 mb-2">۳. فرآیند هابر-بوش</h4>
+        <p>هیدروژن ماده اولیه حیاتی برای تولید آمونیاک است که پایه و اساس کودهای شیمیایی برای تأمین غذای جمعیت جهان محسوب می‌شود:$$\\mathrm{N}_2(\\mathrm{g}) + 3\\mathrm{H}_2(\\mathrm{g}) \\xrightarrow{\\mathrm{Fe}, \\Delta, P} 2\\mathrm{NH}_3(\\mathrm{g})$$</p>
+        <h3 class="text-xl font-bold my-3">ایمنی و چالش‌ها</h3>
+        <p>هیدروژن بسیار سبک است و به سرعت نشت می‌کند. همچنین به دلیل دامنه اشتعال‌پذیری وسیع در هوا ($4\\%$ تا $75\\%$)، نگهداری آن نیازمند مخازن فشار بالا و سیستم‌های تشخیص نشت پیشرفته است. یکی از پدیده‌های جالب، "تردی هیدروژنی" است که در آن نفوذ اتم‌های هیدروژن به داخل ساختار فلزات باعث شکننده شدن آن‌ها می‌شود.</p>
+        <h3 class="text-xl font-bold my-3">وضعیت منحصر به فرد در جدول تناوبی</h3>
+        <p>هیدروژن در هیچ دسته‌بندی استانداردی کاملاً نمی‌گنجد:</p>
+        <ul style="list-style-type: disc;" class="list-inside">
+            <li>مانند فلزات قلیایی (گروه ۱) دارای یک الکترون ظرفیت است و می‌تواند یون $\\mathrm{H}^+$ بسازد.</li>
+            <li>مانند هالوژن‌ها (گروه ۱۷) تنها به یک الکترون برای پر کردن لایه آخر نیاز دارد و می‌تواند یون $\\mathrm{H}^-$ (هیدرید) بسازد.</li>
+            <li>تحت فشار فوق‌العاده زیاد (مانند هسته سیاره مشتری)، هیدروژن می‌تواند به حالت فلزی در بیاید که دارای رسانایی الکتریکی بالاست.</li>
+        </ul>
+        <img src="https://bigbangpage.com/wp-content/uploads/2014/05/jupiterint-.jpg" alt="اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن</p><br>
+        <img src="https://cdn.nody.ir/files/2024/08/10/nody-%D8%B9%DA%A9%D8%B3-%D8%AA%D9%88%DB%8C-%D8%B3%DB%8C%D8%A7%D8%B1%D9%87-%D9%85%D8%B4%D8%AA%D8%B1%DB%8C-1723240576.jpg" alt="میدان مغناطیسی سیارۀ مشتری ناشی از هیدروژن فلزی موجود در هستۀ آن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">میدان مغناطیسی سیارۀ مشتری ناشی از هیدروژن فلزی موجود در هستۀ آن</p>
+        ` },
+            { n : 2, s : 'He', m: '4.0026', c: 'noble-gas', st: 'gas', name: 'هلیم', nameEng: 'Helium', density: '$0.178 \\frac{\\text{g}}{\\text{L}}$', mp: '$-272^{\\circ}\\text{C}$', bp: '$-268^{\\circ}\\text{C}$', istops: '$^3\\mathrm{He}, ^4\\mathrm{He}$', RAtm: '$31\\text{pm}$', RvdW: '$140\\text{pm}$', elctrNeg: '-', OxN: '0', alotrops: '-', discvrr: 'Pierre Janssen, Norman Lockyer', discvrDate: '1868', naming: 'Norman Lockyer', block: 's', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Helium_discharge_tube.jpg/1280px-Helium_discharge_tube.jpg', 
+            d: 'گاز خنثی در بالن‌ها.' },
+            { n : 3, s : 'Li', m: '6.94', c: 'alkali-metal', st: 'solid', name: 'لیتیوم', nameEng: 'Lithium', density: '$0.534 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$180^{\\circ}\\text{C}$', bp: '$1342^{\\circ}\\text{C}$', istops: '$^6\\mathrm{Li}, ^7\\mathrm{Li}$', RAtm: '$167\\text{pm}$', RvdW: '$182\\text{pm}$', elctrNeg: '0.98', OxN: '$+1$', alotrops: '-', discvrr: 'Johan August Arfwedson', discvrDate: '1817', naming: 'Johan August Arfwedson', block: 's', img: 'https://www.umicore.pl/storage/group/3-li-lithium-1150x764-transparent.png', 
+            d: 'باتری‌های قابل شارژ.' },
+            { n : 4, s : 'Be', m: '9.0122', c: 'alkaline-earth', st: 'solid', name: 'بریلیوم', nameEng: 'Beryllium', density: '$1.85 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1287^{\\circ}\\text{C}$', bp: '$2470^{\\circ}\\text{C}$', istops: '$^9\\mathrm{Be}$', RAtm: '$112\\text{pm}$', RvdW: '$153\\text{pm}$', elctrNeg: '1.57', OxN: '$+2$', alotrops: '-', discvrr: 'Louis Nicolas Vauquelin', discvrDate: '1798', naming: 'Friedrich Wöhler', block: 's', img: 'https://t3.ftcdn.net/jpg/09/33/72/16/360_F_933721674_Y6jzD6HZmvi6XAaoQqZ0WDFtMtABKqBf.jpg', 
+            d: 'صنایع هوافضا.' },
+            { n : 5, s : 'B', m: '10.81', c: 'metalloid', st: 'solid', name: 'بور', nameEng: 'Boron', density: '$2.34 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2075^{\\circ}\\text{C}$', bp: '$4000^{\\circ}\\text{C}$', istops: '$^{10}\\mathrm{B}, ^{11}\\mathrm{B}$', RAtm: '$87\\text{pm}$', RvdW: '$192\\text{pm}$', elctrNeg: '2.04', OxN: '$+3$', alotrops: 'بور آمورف، آلفا رومبوهدرال', discvrr: 'Joseph Louis Gay-Lussac, Louis Jacques Thénard', discvrDate: '1808', naming: 'Humphry Davy', block: 'p', img: 'https://www.boronmolecular.com/wp-content/uploads/Boron-in-solid-form.jpg', 
+            d: 'کنترل رآکتور هسته‌ای.' },
+            { n : 6, s : 'C', m: '12.011', c: 'non-metal', st: 'solid', name: 'کربن', nameEng: 'Carbon', density: '$2.26 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$3550^{\\circ}\\text{C}$', bp: '$4827^{\\circ}\\text{C}$', istops: '$^{12}\\mathrm{C}, ^{13}\\mathrm{C}, ^{14}\\mathrm{C}$', RAtm: '$67\\text{pm}$', RvdW: '$170\\text{pm}$', elctrNeg: '2.55', OxN: '$+4, +2, -4$', alotrops: 'الماس، گرافیت، فولرن', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'ماقبل تاریخ', naming: 'Antoine Lavoisier', block: 'p', img: 'https://res.cloudinary.com/mel-science/image/upload/fl_progressive:steep,q_auto:good,w_700/v1/article/93/images/572_ajzrkc.jpg', 
+            d: 'پایه حیات و شیمی آلی.' },
+            { n : 7, s : 'N', m: '14.007', c: 'non-metal', st: 'gas', name: 'نیتروژن', nameEng: 'Nitrogen', density: '$1.25 \\frac{\\text{g}}{\\text{L}}$', mp: '$-210^{\\circ}\\text{C}$', bp: '$-196^{\\circ}\\text{C}$', istops: '$^{14}\\mathrm{N}, ^{15}\\mathrm{N}$', RAtm: '$56\\text{pm}$', RvdW: '$155\\text{pm}$', elctrNeg: '3.04', OxN: '$-3$ تا $+5$', alotrops: '$\\mathrm{N}_2$', discvrr: 'Daniel Rutherford', discvrDate: '1772', naming: 'Jean-Antoine Chaptal', block: 'p', img : 'https://simplelawnsolutions.com/cdn/shop/articles/title_791c6264-bc0f-45d3-b43b-b62bcc444806.jpg?v=1759255252', 
+            d: '۷۸٪ اتمسفر زمین.' },
+            { n : 8, s : 'O', m: '15.999', c: 'non-metal', st: 'gas', name: 'اکسیژن', nameEng: 'Oxygen', density: '$1.43 \\frac{\\text{g}}{\\text{L}}$', mp: '$-218^{\\circ}\\text{C}$', bp: '$-183^{\\circ}\\text{C}$', istops: '$^{16}\\mathrm{O}, ^{17}\\mathrm{O}, ^{18}\\mathrm{O}$', RAtm: '$48\\text{pm}$', RvdW: '$152\\text{pm}$', elctrNeg: '3.44', OxN: '$-2$', alotrops: '$\\mathrm{O}_2, \\mathrm{O}_3$', discvrr: 'Joseph Priestley, Carl Wilhelm Scheele', discvrDate: '1774', naming: 'Antoine Lavoisier', block: 'p', img: 'https://controlequipment.com.au/wp-content/uploads/2018/02/O2.webp', 
+            d: 'عامل تنفس و سوختن.' },
+            { n : 9, s : 'F', m: '18.998', c: 'halogen', st: 'gas', name: 'فلوئور', nameEng: 'Fluorine', density: '$1.7 \\frac{\\text{g}}{\\text{L}}$', mp: '$-220^{\\circ}\\text{C}$', bp: '$-188^{\\circ}\\text{C}$', istops: '$^{19}\\mathrm{F}$', RAtm: '$42\\text{pm}$', RvdW: '$147\\text{pm}$', elctrNeg: '3.98', OxN: '$-1$', alotrops: '$\\mathrm{F}_2$', discvrr: 'Henri Moissan', discvrDate: '1886', naming: 'André-Marie Ampère', block: 'p', img: 'https://www.thoughtco.com/thmb/YqQ9z6Y_UZ2qQayVioBDVuA19wU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/fluorinesimulant-56a12c323df78cf772681c61.jpg', 
+            d: 'واکنش‌پذیرترین عنصر.' },
+            { n : 10, s : 'Ne', m: '20.180', c: 'noble-gas', st: 'gas', name: 'نئون', nameEng: 'Neon', density: '$0.9 \\frac{\\text{g}}{\\text{L}}$', mp: '$-248^{\\circ}\\text{C}$', bp: '$-246^{\\circ}\\text{C}$', istops: '$^{20}\\mathrm{Ne}, ^{22}\\mathrm{Ne}$', RAtm: '$38\\text{pm}$', RvdW: '$154\\text{pm}$', elctrNeg: '-', OxN: '0', alotrops: '-', discvrr: 'William Ramsay, Morris Travers', discvrDate: '1898', naming: 'William Ramsay', block: 'p', img: 'https://lh3.googleusercontent.com/abFtNk_0QtglPc1DpxIfBpoFTfSHp66oG8wWlAtzaZIgptWJG1XNVwY9fpYJZmyWEXC0iE_YIc0wLRZtIgVf8LltPg=s1280-w1280-h800', 
+            d: 'تابلوهای تبلیغاتی قرمز.' },
+            { n : 11, s : 'Na', m: '22.989', c: 'alkali-metal', st: 'solid', name: 'سدیم', nameEng: 'Sodium', density: '$0.968 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$98^{\\circ}\\text{C}$', bp: '$883^{\\circ}\\text{C}$', istops: '$^{23}\\mathrm{Na}$', RAtm: '$186\\text{pm}$', RvdW: '$227\\text{pm}$', elctrNeg: '0.93', OxN: '$+1$', alotrops: '-', discvrr: 'Humphry Davy', discvrDate: '1807', naming: 'Humphry Davy', block: 's', img: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Na_%28Sodium%29.jpg', 
+            d: 'عنصر حیاتی برای تعادل الکترولیت بدن.' },
+            { n : 12, s : 'Mg', m: '24.305', c: 'alkaline-earth', st: 'solid', name: 'منیزیم', nameEng: 'Magnesium', density: '$1.738 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$650^{\\circ}\\text{C}$', bp: '$1090^{\\circ}\\text{C}$', istops: '$^{24}\\mathrm{Mg}, ^{25}\\mathrm{Mg}, ^{26}\\mathrm{Mg}$', RAtm: '$160\\text{pm}$', RvdW: '$173\\text{pm}$', elctrNeg: '1.31', OxN: '$+2$', alotrops: '-', discvrr: 'Joseph Black', discvrDate: '1755', naming: 'Humphry Davy', block: 's', img: 'https://cdn.mos.cms.futurecdn.net/tcKDszTDBGHfeKQgb3H74o-500-80.jpg', 
+            d: 'در مرکز مولکول کلروفیل گیاهان قرار دارد.' },
+            { n : 13, s : 'Al', m: '26.981', c: 'post-transition', st: 'solid', name: 'آلومینیوم', nameEng: 'Aluminium', density: '$2.70 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$660^{\\circ}\\text{C}$', bp: '$2519^{\\circ}\\text{C}$', istops: '$^{27}\\mathrm{Al}$', RAtm: '$143\\text{pm}$', RvdW: '$184\\text{pm}$', elctrNeg: '1.61', OxN: '$+3$', alotrops: '-', discvrr: 'Hans Christian Ørsted', discvrDate: '1825', naming: 'Humphry Davy', block: 'p', img: 'https://thechemicalelements.com/wp-content/uploads/2020/04/pure-aluminum.webp', 
+            d: 'فراوان‌ترین فلز در پوسته زمین.' },
+            { n : 14, s : 'Si', m: '28.085', c: 'metalloid', st: 'solid', name: 'سیلیسیوم', nameEng: 'Silicon', density: '$2.329 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1414^{\\circ}\\text{C}$', bp: '$3265^{\\circ}\\text{C}$', istops: '$^{28}\\mathrm{Si}, ^{29}\\mathrm{Si}, ^{30}\\mathrm{Si}$', RAtm: '$117\\text{pm}$', RvdW: '$210\\text{pm}$', elctrNeg: '1.90', OxN: '$+4, -4$', alotrops: '$\\mathrm{Si}$ (بلوری)، $\\mathrm{Si}$ (آمورف)', discvrr: 'Jöns Jacob Berzelius', discvrDate: '1824', naming: 'Thomas Thomson', block: 'p', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/SiliconCroda.jpg', 
+            d: 'قلب تپنده صنایع الکترونیک و تراشه‌ها.' },
+            { n : 15, s : 'P', m: '30.973', c: 'non-metal', st: 'solid', name: 'فسفر', nameEng: 'Phosphorus', density: '$1.823 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$44^{\\circ}\\text{C}$', bp: '$280^{\\circ}\\text{C}$', istops: '$^{31}\\mathrm{P}$', RAtm: '$110\\text{pm}$', RvdW: '$180\\text{pm}$', elctrNeg: '2.19', OxN: '$\\pm3, +5$', alotrops: '$\\mathrm{P}_4$ (سفید)، $\\mathrm{P}_n$ (قرمز)، $\\mathrm{P}$ (سیاه)', discvrr: 'Hennig Brand', discvrDate: '1669', naming: 'Hennig Brand', block: 'p', img: 'https://cdn.mos.cms.futurecdn.net/kUec7ZhbuZkR4DQAhvPB57.jpg', 
+            d: 'بخش اصلی ساختار DNA و ATP.' },
+            { n : 16, s : 'S', m: '32.06', c: 'non-metal', st: 'solid', name: 'گوگرد', nameEng: 'Sulfur', density: '$2.067 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$115^{\\circ}\\text{C}$', bp: '$444^{\\circ}\\text{C}$', istops: '$^{32}\\mathrm{S}, ^{33}\\mathrm{S}, ^{34}\\mathrm{S}, ^{36}\\mathrm{S}$', RAtm: '$103\\text{pm}$', RvdW: '$180\\text{pm}$', elctrNeg: '2.58', OxN: '$-2, +4, +6$', alotrops: '$\\alpha\\text{-}\\mathrm{S}_8$ (رومبیک)، $\\beta\\text{-}\\mathrm{S}_8$ (مونوکلینیک)', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'ماقبل تاریخ', naming: 'Antoine-Laurent de Lavoisier', block: 'p', img: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Sulfur-sample.jpg', 
+            d: 'به عنوان "سنگ آتش‌زا" در متون کهن شناخته می‌شد.' },
+            { n : 17, s : 'Cl', m: '35.45', c: 'halogen', st: 'gas', name: 'کلر', nameEng: 'Chlorine', density: '$3.21 \\frac{\\text{g}}{\\text{L}}$', mp: '$-101^{\\circ}\\text{C}$', bp: '$-34^{\\circ}\\text{C}$', istops: '$^{35}\\mathrm{Cl}, ^{37}\\mathrm{Cl}$', RAtm: '$99\\text{pm}$', RvdW: '$175\\text{pm}$', elctrNeg: '3.16', OxN: '$-1, +1, +3, +5, +7$', alotrops: '$\\mathrm{Cl}_2$', discvrr: 'Carl Wilhelm Scheele', discvrDate: '1774', naming: 'Humphry Davy', block: 'p', img: 'https://tiimg.tistatic.com/fp/1/533/chlorine-557.jpg', 
+            d: 'گازی زرد-سبز و بسیار سمی.' },
+            { n : 18, s : 'Ar', m: '39.948', c: 'noble-gas', st: 'gas', name: 'آرگون', nameEng: 'Argon', density: '$1.784 \\frac{\\text{g}}{\\text{L}}$', mp: '$-189^{\\circ}\\text{C}$', bp: '$-185^{\\circ}\\text{C}$', istops: '$^{36}\\mathrm{Ar}, ^{38}\\mathrm{Ar}, ^{40}\\mathrm{Ar}$', RAtm: '$97\\text{pm}$', RvdW: '$188\\text{pm}$', elctrNeg: '-', OxN: '0', alotrops: '-', discvrr: 'Lord Rayleigh, William Ramsay', discvrDate: '1894', naming: 'Lord Rayleigh', block: 'p', img: 'https://www.smart-elements.com/Angebote/Ar_neu800x600.jpg', 
+            d: 'واژه‌ی آرگون به معنای "تنبلی" در یونانی است.' },
+            { n : 19, s : 'K', m: '39.098', c: 'alkali-metal', st: 'solid', name: 'پتاسیم', nameEng: 'Potassium', density: '$0.862 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$63^{\\circ}\\text{C}$', bp: '$759^{\\circ}\\text{C}$', istops: '$^{39}\\mathrm{K}, ^{41}\\mathrm{K}$', RAtm: '$227\\text{pm}$', RvdW: '$275\\text{pm}$', elctrNeg: '0.82', OxN: '$+1$', alotrops: '-', discvrr: 'Humphry Davy', discvrDate: '1807', naming: 'Humphry Davy', block: 's', img: 'https://cdn.britannica.com/77/131177-050-79292189/fragments-Potassium-metal.jpg', 
+            d: 'فلزی نرم که با چاقو بریده می‌شود و با آب به شدت واکنش می‌دهد.' },
+            { n : 20, s : 'Ca', m: '40.078', c: 'alkaline-earth', st: 'solid', name: 'کلسیم', nameEng: 'Calcium', density: '$1.54 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$842^{\\circ}\\text{C}$', bp: '$1484^{\\circ}\\text{C}$', istops: '$^{40}\\mathrm{Ca}, ^{44}\\mathrm{Ca}$', RAtm: '$197\\text{pm}$', RvdW: '$231\\text{pm}$', elctrNeg: '1.00', OxN: '$+2$', alotrops: '-', discvrr: 'Humphry Davy', discvrDate: '1808', naming: 'Humphry Davy', block: 's', img: 'https://www.arra.ir/blog/wp-content/uploads/2024/04/calcium-header-1024x538.webp', 
+            d: 'فراوان‌ترین فلز در بدن انسان.' },
+            { n : 21, s : 'Sc', m: '44.956', c: 'transition-metal', st: 'solid', name: 'اسکاندیوم', nameEng: 'Scandium', density: '$2.985 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1541^{\\circ}\\text{C}$', bp: '$2836^{\\circ}\\text{C}$', istops: '$^{45}\\mathrm{Sc}$', RAtm: '$162\\text{pm}$', RvdW: '$211\\text{pm}$', elctrNeg: '1.36', OxN: '$+3$', alotrops: '-', discvrr: 'Lars Fredrik Nilson', discvrDate: '1879', naming: 'Lars Fredrik Nilson', block: 'd', img: 'https://7cad390533514c32acc8-75d23ce06fcfaf780446d85d50c33f7b.ssl.cf6.rackcdn.com/sc/1671441604-normal-Scandium%20metal.jpg', 
+            d: 'در آلیاژهای آلومینیومی برای صنایع هوافضا استفاده می‌شود.' },
+            { n : 22, s : 'Ti', m: '47.867', c: 'transition-metal', st: 'solid', name: 'تیتانیوم', nameEng: 'Titanium', density: '$4.506 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1668^{\\circ}\\text{C}$', bp: '$3287^{\\circ}\\text{C}$', istops: '$^{46}\\mathrm{Ti}, ^{47}\\mathrm{Ti}, ^{48}\\mathrm{Ti}, ^{49}\\mathrm{Ti}, ^{50}\\mathrm{Ti}$', RAtm: '$147\\text{pm}$', RvdW: '$200\\text{pm}$', elctrNeg: '1.54', OxN: '$+4, +3, +2$', alotrops: '$\\alpha\\text{-Ti}, \\beta\\text{-Ti}$', discvrr: 'William Gregor', discvrDate: '1791', naming: 'Martin Heinrich Klaproth', block: 'd', img: 'https://www.geology.arkansas.gov/images/minerals/metallic/Titanium_crystals.jpg', 
+            d: 'به دلیل نسبت استحکام به وزن بالا و مقاومت در برابر خوردگی مشهور است.' },
+            { n : 23, s : 'V', m: '50.942', c: 'transition-metal', st: 'solid', name: 'وانادیوم', nameEng: 'Vanadium', density: '$6.11 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1910^{\\circ}\\text{C}$', bp: '$3407^{\\circ}\\text{C}$', istops: '$^{51}\\mathrm{V}$', RAtm: '$134\\text{pm}$', RvdW: '$205\\text{pm}$', elctrNeg: '1.63', OxN: '$+5, +4, +3, +2$', alotrops: '-', discvrr: 'Andrés Manuel del Río', discvrDate: '1801', naming: 'Nils Gabriel Sefström', block: 'd', img: 'https://farm7.static.flickr.com/6145/6010512363_d88332c07e_b.jpg', 
+            d: 'باعث افزایش سختی فولاد در ابزارهای صنعتی می‌شود.' },
+            { n : 24, s : 'Cr', m: '51.996', c: 'transition-metal', st: 'solid', name: 'کروم', nameEng: 'Chromium', density: '$7.19 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1907^{\\circ}\\text{C}$', bp: '$2671^{\\circ}\\text{C}$', istops: '$^{52}\\mathrm{Cr}, ^{53}\\mathrm{Cr}, ^{54}\\mathrm{Cr}$', RAtm: '$128\\text{pm}$', RvdW: '$206\\text{pm}$', elctrNeg: '1.66', OxN: '$+6, +3, +2$', alotrops: '-', discvrr: 'Louis Nicolas Vauquelin', discvrDate: '1797', naming: 'Louis Nicolas Vauquelin', block: 'd', img: 'https://briandcolwell.com/wp-content/uploads/2025/07/Uses_of_Chromium.png', 
+            d: 'عنصر کلیدی در تولید فولاد ضدزنگ (Stainless Steel).' },
+            { n : 25, s : 'Mn', m: '54.938', c: 'transition-metal', st: 'solid', name: 'منگنز', nameEng: 'Manganese', density: '$7.21 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1246^{\\circ}\\text{C}$', bp: '$2061^{\\circ}\\text{C}$', istops: '$^{55}\\mathrm{Mn}$', RAtm: '$127\\text{pm}$', RvdW: '$205\\text{pm}$', elctrNeg: '1.55', OxN: '$+7, +4, +2$', alotrops: '$\\alpha, \\beta, \\gamma, \\delta\\text{-Mn}$', discvrr: 'Johan Gottlieb Gahn', discvrDate: '1774', naming: 'Carl Wilhelm Scheele', block: 'd', img: 'https://www.umicore.pl/storage/group/sized/14035-metals-nuggets-1150x764-manganese.b03c979f-bccf-93db-092d-5bd2468cd4b2.webp?1709298360', 
+            d: 'برای حذف ناخالصی‌ها در فرآیند فولادسازی ضروری است.' },
+            { n : 26, s : 'Fe', m: '55.845', c: 'transition-metal', st: 'solid', name: 'آهن', nameEng: 'Iron', density: '$7.874 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1538^{\\circ}\\text{C}$', bp: '$2862^{\\circ}\\text{C}$', istops: '$^{54}\\mathrm{Fe}, ^{56}\\mathrm{Fe}, ^{57}\\mathrm{Fe}, ^{58}\\mathrm{Fe}$', RAtm: '$126\\text{pm}$', RvdW: '$204\\text{pm}$', elctrNeg: '1.83', OxN: '$+3, +2$', alotrops: '$\\alpha\\text{-Fe}$ (فریک)، $\\gamma\\text{-Fe}$ (آستنیت)', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'پیش از 5000 سال پیش از میلاد', naming: '-', block: 'd', img: 'https://media.istockphoto.com/id/172430480/photo/zinc-mine-nugget.jpg?s=612x612&w=0&k=20&c=ox-Fcv5jdeWY9wvagJMmcWLk5ohS_9dX5pTGgCo3pJ0=', 
+            d: 'فراوان‌ترین عنصر تشکیل‌دهنده کل کره زمین (با احتساب هسته).' },
+            { n : 27, s : 'Co', m: '58.933', c: 'transition-metal', st: 'solid', name: 'کبالت', nameEng: 'Cobalt', density: '$8.90 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1495^{\\circ}\\text{C}$', bp: '$2927^{\\circ}\\text{C}$', istops: '$^{59}\\mathrm{Co}$', RAtm: '$125\\text{pm}$', RvdW: '$200\\text{pm}$', elctrNeg: '1.88', OxN: '$+3, +2$', alotrops: '$\\epsilon\\text{-Co}, \\beta\\text{-Co}$', discvrr: 'Georg Brandt', discvrDate: '1735', naming: 'Georg Brandt', block: 'd', img: 'https://www.umicore.pl/storage/group/sized/27-co-cobalt-1150x764-transparent.5b514535-198e-4d0e-4c70-dc2b10600013.webp?1709305474', 
+            d: 'در ساخت آهنرباهای بسیار قوی و ابرآلیاژها کاربرد دارد.' },
+            { n : 28, s : 'Ni', m: '58.693', c: 'transition-metal', st: 'solid', name: 'نیکل', nameEng: 'Nickel', density: '$8.908 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1455^{\\circ}\\text{C}$', bp: '$2913^{\\circ}\\text{C}$', istops: '$^{58}\\mathrm{Ni}, ^{60}\\mathrm{Ni}, ^{61}\\mathrm{Ni}, ^{62}\\mathrm{Ni}, ^{64}\\mathrm{Ni}$', RAtm: '$124\\text{pm}$', RvdW: '$197\\text{pm}$', elctrNeg: '1.91', OxN: '$+3, +2$', alotrops: '-', discvrr: 'Axel Fredrik Cronstedt', discvrDate: '1751', naming: 'Axel Fredrik Cronstedt', block: 'd', img: 'https://www.umicore.pl/storage/group/sized/28-ni-nickel-1150x764-transparent.5b514535-198e-4d0e-4c70-dc2b10600013.webp?1709300360', 
+            d: 'بیشتر در آبکاری فلزات و ساخت سکه‌ها به کار می‌رود.' },
+            { n : 29, s : 'Cu', m: '63.546', c: 'transition-metal', st: 'solid', name: 'مس', nameEng: 'Copper', density: '$8.96 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1085^{\\circ}\\text{C}$', bp: '$2562^{\\circ}\\text{C}$', istops: '$^{63}\\mathrm{Cu}, ^{65}\\mathrm{Cu}$', RAtm: '$128\\text{pm}$', RvdW: '$196\\text{pm}$', elctrNeg: '1.90', OxN: '$+2, +1$', alotrops: '-', discvrr: 'خاورمیانه', discvrDate: '9000 سال پیش از میلاد', naming: '-', block: 'd', img: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/NatCopper.jpg', 
+            d: 'اولین فلزی که توسط انسان استخراج و استفاده شد.' },
+            { n : 30, s : 'Zn', m: '65.38', c: 'transition-metal', st: 'solid', name: 'روی', nameEng: 'Zinc', density: '$7.14 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$419^{\\circ}\\text{C}$', bp: '$907^{\\circ}\\text{C}$', istops: '$^{64}\\mathrm{Zn}, ^{66}\\mathrm{Zn}, ^{67}\\mathrm{Zn}, ^{68}\\mathrm{Zn}$', RAtm: '$134\\text{pm}$', RvdW: '$210\\text{pm}$', elctrNeg: '1.65', OxN: '$+2$', alotrops: '-', discvrr: 'فلزگران هندی', discvrDate: 'پیش از 1000 پیش از میلاد', naming: 'پاراسلسوس', block: 'd', img: 'https://www.thoughtco.com/thmb/XnUDV1SpCQ_Et4HdzRpuB70ylDQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-172430480-5c54686f46e0fb00013a202d.jpg', 
+            d: 'برای گالوانیزه کردن آهن و جلوگیری از زنگ‌زدگی استفاده می‌شود.' },
+            { n : 31, s : 'Ga', m: '69.723', c: 'post-transition', st: 'solid', name: 'گالیوم', nameEng: 'Gallium', density: '$5.91 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$29.7^{\\circ}\\text{C}$', bp: '$2229^{\\circ}\\text{C}$', istops: '$^{69}\\mathrm{Ga}, ^{71}\\mathrm{Ga}$', RAtm: '$135\\text{pm}$', RvdW: '$187\\text{pm}$', elctrNeg: '1.81', OxN: '$+3$', alotrops: '$\\alpha, \\beta, \\gamma, \\delta\\text{-Ga}$', discvrr: 'Lecoq de Boisbaudran', discvrDate: '1875', naming: 'Lecoq de Boisbaudran', block: 'p', img: 'https://m.media-amazon.com/images/I/51Kjc4kKZSL._SS400_.jpg', 
+            d: 'در دمای اتاق جامد است اما در کف دست انسان ذوب می‌شود.' },
+            { n : 32, s : 'Ge', m: '72.63', c: 'metalloid', st: 'solid', name: 'ژرمانیوم', nameEng: 'Germanium', density: '$5.323 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$938^{\\circ}\\text{C}$', bp: '$2833^{\\circ}\\text{C}$', istops: '$^{70}\\mathrm{Ge}, ^{72}\\mathrm{Ge}, ^{73}\\mathrm{Ge}, ^{74}\\mathrm{Ge}, ^{76}\\mathrm{Ge}$', RAtm: '$122\\text{pm}$', RvdW: '$211\\text{pm}$', elctrNeg: '2.01', OxN: '$+4, +2$', alotrops: '$\\alpha, \\beta\\text{-Ge}$', discvrr: 'Clemens Winkler', discvrDate: '1886', naming: 'Clemens Winkler', block: 'p', img: 'https://www.thoughtco.com/thmb/2VWjl6AHGYbTmiw6Eb3Vi7ce_DY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-685028985-5bb389d946e0fb00261ea558.jpg', 
+            d: 'یکی از مهم‌ترین مواد در ساخت دوربین‌های دید در شب.' },
+            { n : 33, s : 'As', m: '74.921', c: 'metalloid', st: 'solid', name: 'آرسنیک', nameEng: 'Arsenic', density: '$5.727 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$817^{\\circ}\\text{C}$ (Sublimes)', bp: '$614^{\\circ}\\text{C}$', istops: '$^{75}\\mathrm{As}$', RAtm: '$119\\text{pm}$', RvdW: '$185\\text{pm}$', elctrNeg: '2.18', OxN: '$\\pm3, +5$', alotrops: '$\\mathrm{As}_4$ (زرد)، $\\mathrm{As}_n$ (خاکستری)، $\\mathrm{As}$ (سیاه)', discvrr: 'Albertus Magnus', discvrDate: '1250', naming: '-', block: 'p', img: 'https://www.thoughtco.com/thmb/mQ4LX8-0x65-Zb-LYI_V0fcYsjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-184957763-25bd535075fa4891bbd52a57a1e6cb0c.jpg', 
+            d: 'ترکیبات آن از دیرباز به عنوان سم و اخیراً در الکترونیک استفاده می‌شود.' },
+            { n : 34, s : 'Se', m: '78.971', c: 'non-metal', st: 'solid', name: 'سلنیوم', nameEng: 'Selenium', density: '$4.81 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$221^{\\circ}\\text{C}$', bp: '$685^{\\circ}\\text{C}$', istops: '$^{74}\\mathrm{Se}, ^{76}\\mathrm{Se}, ^{77}\\mathrm{Se}, ^{78}\\mathrm{Se}, ^{80}\\mathrm{Se}, ^{82}\\mathrm{Se}$', RAtm: '$116\\text{pm}$', RvdW: '$190\\text{pm}$', elctrNeg: '2.55', OxN: '$-2, +4, +6$', alotrops: '$\\mathrm{Se}_8$ (قرمز)، $\\mathrm{Se}_n$ (خاکستری)', discvrr: 'Jöns Jacob Berzelius', discvrDate: '1817', naming: 'Jöns Jacob Berzelius', block: 'p', img: 'https://cdn.sanity.io/images/us347vpq/production/1a147521e7c0c6e63048ba7a1365947d0020388b-1080x1080.jpg?w=3840&q=75&fit=clip&auto=format', 
+            d: 'رسانایی الکتریکی آن در حضور نور افزایش می‌یابد.' },
+            { n : 35, s : 'Br', m: '79.904', c: 'halogen', st: 'liquid', name: 'برم', nameEng: 'Bromine', density: '$3.102 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$-7.2^{\\circ}\\text{C}$', bp: '$58.8^{\\circ}\\text{C}$', istops: '$^{79}\\mathrm{Br}, ^{81}\\mathrm{Br}$', RAtm: '$114\\text{pm}$', RvdW: '$185\\text{pm}$', elctrNeg: '2.96', OxN: '$-1, +1, +5$', alotrops: '$\\mathrm{Br}_2$', discvrr: 'Antoine Jérôme Balard', discvrDate: '1826', naming: 'Joseph Louis Gay-Lussac', block: 'p', img: 'https://cdn.mos.cms.futurecdn.net/S6SNpRNQFXaMCyyYttoQcc.jpg', 
+            d: 'تنها نافلز مایع در دمای اتاق با بویی تند و زننده.' },
+            { n : 36, s : 'Kr', m: '83.798', c: 'noble-gas', st: 'gas', name: 'کریپتون', nameEng: 'Krypton', density: '$3.75 \\frac{\\text{g}}{\\text{L}}$', mp: '$-157.4^{\\circ}\\text{C}$', bp: '$-153.2^{\\circ}\\text{C}$', istops: '$^{80}\\mathrm{Kr}, ^{82}\\mathrm{Kr}, ^{83}\\mathrm{Kr}, ^{84}\\mathrm{Kr}, ^{86}\\mathrm{Kr}$', RAtm: '$110\\text{pm}$', RvdW: '$202\\text{pm}$', elctrNeg: '3.00', OxN: '0', alotrops: '-', discvrr: 'William Ramsay, Morris Travers', discvrDate: '1898', naming: 'William Ramsay', block: 'p', img: 'https://westairgases.com/wp-content/uploads/2025/02/Krypton-Lighting.jpg', 
+            d: 'در لامپ‌های فلوئورسنت و لیزرهای جراحی چشم استفاده می‌شود.' },
+            { n : 37, s : 'Rb', m: '85.468', c: 'alkali-metal', st: 'solid', name: 'روبیدیوم', nameEng: 'Rubidium', density: '$1.532 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$39.3^{\\circ}\\text{C}$', bp: '$688^{\\circ}\\text{C}$', istops: '$^{85}\\mathrm{Rb}, ^{87}\\mathrm{Rb}$', RAtm: '$248\\text{pm}$', RvdW: '$303\\text{pm}$', elctrNeg: '0.82', OxN: '$+1$', alotrops: '-', discvrr: 'Robert Bunsen, Gustav Kirchhoff', discvrDate: '1861', naming: 'Robert Bunsen', block: 's', 
+            d: 'در ساعت‌های اتمی بسیار دقیق کاربرد دارد.' },
+            { n : 38, s : 'Sr', m: '87.62', c: 'alkaline-earth', st: 'solid', name: 'استرانسیوم', nameEng: 'Strontium', density: '$2.64 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$777^{\\circ}\\text{C}$', bp: '$1377^{\\circ}\\text{C}$', istops: '$^{86}\\mathrm{Sr}, ^{87}\\mathrm{Sr}, ^{88}\\mathrm{Sr}$', RAtm: '$215\\text{pm}$', RvdW: '$249\\text{pm}$', elctrNeg: '0.95', OxN: '$+2$', alotrops: '-', discvrr: 'Adair Crawford', discvrDate: '1790', naming: 'Thomas Charles Hope', block: 's', 
+            d: 'مسئول رنگ قرمز در آتش‌بازی‌هاست.' },
+            { n : 39, s : 'Y', m: '88.906', c: 'transition-metal', st: 'solid', name: 'ایتریوم', nameEng: 'Yttrium', density: '$4.472 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1526^{\\circ}\\text{C}$', bp: '$2930^{\\circ}\\text{C}$', istops: '$^{89}\\mathrm{Y}$', RAtm: '$180\\text{pm}$', RvdW: '$219\\text{pm}$', elctrNeg: '1.22', OxN: '$+3$', alotrops: '-', discvrr: 'Johan Gadolin', discvrDate: '1794', naming: 'Johan Gadolin', block: 'd', 
+            d: 'در ساخت ابررساناهای دمای بالا استفاده می‌شود.' },
+            { n : 40, s : 'Zr', m: '91.224', c: 'transition-metal', st: 'solid', name: 'زیرکونیوم', nameEng: 'Zirconium', density: '$6.52 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1855^{\\circ}\\text{C}$', bp: '$4377^{\\circ}\\text{C}$', istops: '$^{90}\\mathrm{Zr}, ^{91}\\mathrm{Zr}, ^{92}\\mathrm{Zr}, ^{94}\\mathrm{Zr}, ^{96}\\mathrm{Zr}$', RAtm: '$160\\text{pm}$', RvdW: '$186\\text{pm}$', elctrNeg: '1.33', OxN: '$+4$', alotrops: '$\\alpha, \\beta\\text{-Zr}$', discvrr: 'Martin Heinrich Klaproth', discvrDate: '1789', naming: 'Martin Heinrich Klaproth', block: 'd', 
+            d: 'به دلیل جذب پایین نوترون در رآکتورهای هسته‌ای کاربرد دارد.' },
+            { n : 41, s : 'Nb', m: '92.906', c: 'transition-metal', st: 'solid', name: 'نیوبیوم', nameEng: 'Niobium', density: '$8.57 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2477^{\\circ}\\text{C}$', bp: '$4744^{\\circ}\\text{C}$', istops: '$^{93}\\mathrm{Nb}$', RAtm: '$146\\text{pm}$', RvdW: '$207\\text{pm}$', elctrNeg: '1.6', OxN: '$+5, +3$', alotrops: '-', discvrr: 'Charles Hatchett', discvrDate: '1801', naming: 'Heinrich Rose', block: 'd', 
+            d: 'در ساخت موتورهای جت و فولادهای مقاوم کاربرد دارد.' },
+            { n : 42, s : 'Mo', m: '95.95', c: 'transition-metal', st: 'solid', name: 'مولیبدن', nameEng: 'Molybdenum', density: '$10.28 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2623^{\\circ}\\text{C}$', bp: '$4639^{\\circ}\\text{C}$', istops: '$^{92}\\mathrm{Mo}, ^{95}\\mathrm{Mo}, ^{96}\\mathrm{Mo}, ^{98}\\mathrm{Mo}$', RAtm: '$139\\text{pm}$', RvdW: '$209\\text{pm}$', elctrNeg: '2.16', OxN: '$+6, +4$', alotrops: '-', discvrr: 'Carl Wilhelm Scheele', discvrDate: '1778', naming: 'Carl Wilhelm Scheele', block: 'd', 
+            d: 'در روغن‌های صنعتی با تحمل دمای بالا استفاده می‌شود.' },
+            { n : 43, s : 'Tc', m: '(98)', c: 'transition-metal', st: 'solid', name: 'تکنسیوم', nameEng: 'Technetium', density: '$11 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2157^{\\circ}\\text{C}$', bp: '$4265^{\\circ}\\text{C}$', istops: '$^{98}\\mathrm{Tc}, ^{99}\\mathrm{Tc}$', RAtm: '$136\\text{pm}$', RvdW: '$209\\text{pm}$', elctrNeg: '1.9', OxN: '$+7, +4$', alotrops: '-', discvrr: 'Emilio Segrè, Carlo Perrier', discvrDate: '1937', naming: 'Emilio Segrè', block: 'd', ra: true, 
+            d: 'اولین عنصری که به صورت مصنوعی ساخته شد.' },
+            { n : 44, s : 'Ru', m: '101.07', c: 'transition-metal', st: 'solid', name: 'روتنیوم', nameEng: 'Ruthenium', density: '$12.45 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2334^{\\circ}\\text{C}$', bp: '$4150^{\\circ}\\text{C}$', istops: '$^{102}\\mathrm{Ru}, ^{104}\\mathrm{Ru}$', RAtm: '$134\\text{pm}$', RvdW: '$207\\text{pm}$', elctrNeg: '2.2', OxN: '$+3, +4, +8$', alotrops: '-', discvrr: 'Karl Ernst Claus', discvrDate: '1844', naming: 'Karl Ernst Claus', block: 'd', 
+            d: 'از فلزات گروه پلاتین و بسیار کمیاب است.' },
+            { n : 45, s : 'Rh', m: '102.91', c: 'transition-metal', st: 'solid', name: 'رودیوم', nameEng: 'Rhodium', density: '$12.41 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1964^{\\circ}\\text{C}$', bp: '$3695^{\\circ}\\text{C}$', istops: '$^{103}\\mathrm{Rh}$', RAtm: '$134\\text{pm}$', RvdW: '$195\\text{pm}$', elctrNeg: '2.28', OxN: '$+3$', alotrops: '-', discvrr: 'William Hyde Wollaston', discvrDate: '1803', naming: 'William Hyde Wollaston', block: 'd', 
+            d: 'گران‌قیمت‌ترین فلز جهان (بسته به نوسانات بازار).' },
+            { n : 46, s : 'Pd', m: '106.42', c: 'transition-metal', st: 'solid', name: 'پالادیوم', nameEng: 'Palladium', density: '$12.02 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1555^{\\circ}\\text{C}$', bp: '$2963^{\\circ}\\text{C}$', istops: '$^{105}\\mathrm{Pd}, ^{106}\\mathrm{Pd}, ^{108}\\mathrm{Pd}, ^{110}\\mathrm{Pd}$', RAtm: '$137\\text{pm}$', RvdW: '$202\\text{pm}$', elctrNeg: '2.20', OxN: '$+2, +4$', alotrops: '-', discvrr: 'William Hyde Wollaston', discvrDate: '1803', naming: 'William Hyde Wollaston', block: 'd', 
+            d: 'توانایی جذب حجم عظیمی از گاز هیدروژن را دارد.' },
+            { n : 47, s : 'Ag', m: '107.87', c: 'transition-metal', st: 'solid', name: 'نقره', nameEng: 'Silver', density: '$10.49 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$961^{\\circ}\\text{C}$', bp: '$2162^{\\circ}\\text{C}$', istops: '$^{107}\\mathrm{Ag}, ^{109}\\mathrm{Ag}$', RAtm: '$144\\text{pm}$', RvdW: '$172\\text{pm}$', elctrNeg: '1.93', OxN: '$+1$', alotrops: '-', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'پیش از 3000 سال پیش از میلاد', naming: '-', block: 'd', 
+            d: 'بالاترین رسانایی الکتریکی را در بین تمام عناصر دارد.' },
+            { n : 48, s : 'Cd', m: '112.41', c: 'transition-metal', st: 'solid', name: 'کادمیوم', nameEng: 'Cadmium', density: '$8.65 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$321^{\\circ}\\text{C}$', bp: '$767^{\\circ}\\text{C}$', istops: '$^{110}\\mathrm{Cd}, ^{111}\\mathrm{Cd}, ^{112}\\mathrm{Cd}, ^{114}\\mathrm{Cd}$', RAtm: '$151\\text{pm}$', RvdW: '$158\\text{pm}$', elctrNeg: '1.69', OxN: '$+2$', alotrops: '-', discvrr: 'Karl Samuel Leberecht Hermann', discvrDate: '1817', naming: 'Friedrich Stromeyer', block: 'd', 
+            d: 'فلزی سمی که در برخی باتری‌ها استفاده می‌شود.' },
+            { n : 49, s : 'In', m: '114.82', c: 'post-transition', st: 'solid', name: 'ایندیوم', nameEng: 'Indium', density: '$7.31 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$156^{\\circ}\\text{C}$', bp: '$2072^{\\circ}\\text{C}$', istops: '$^{113}\\mathrm{In}, ^{115}\\mathrm{In}$', RAtm: '$167\\text{pm}$', RvdW: '$193\\text{pm}$', elctrNeg: '1.78', OxN: '$+3$', alotrops: '-', discvrr: 'Ferdinand Reich, Hieronymous Theodor Richter', discvrDate: '1863', naming: 'Ferdinand Reich', block: 'p', 
+            d: 'در ساخت صفحات لمسی (LCD) بسیار حیاتی است.' },
+            { n : 50, s : 'Sn', m: '118.71', c: 'post-transition', st: 'solid', name: 'قلع', nameEng: 'Tin', density: '$7.26 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$231^{\\circ}\\text{C}$', bp: '$2602^{\\circ}\\text{C}$', istops: '$^{112}\\mathrm{Sn}, ^{118}\\mathrm{Sn}, ^{120}\\mathrm{Sn}$', RAtm: '$140\\text{pm}$', RvdW: '$217\\text{pm}$', elctrNeg: '1.96', OxN: '$+4, +2$', alotrops: '$\\alpha\\text{-Sn}$ (خاکستری)، $\\beta\\text{-Sn}$ (سفید)', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'پیش از 3500 پیش از میلاد', naming: '-', block: 'p', 
+            d: 'برای جلوگیری از خوردگی روی فلزات دیگر پوشانده می‌شود.' },
+            { n : 51, s : 'Sb', m: '121.76', c: 'metalloid', st: 'solid', name: 'آنتیموان', nameEng: 'Antimony', density: '$6.697 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$630^{\\circ}\\text{C}$', bp: '$1587^{\\circ}\\text{C}$', istops: '$^{121}\\mathrm{Sb}, ^{123}\\mathrm{Sb}$', RAtm: '$140\\text{pm}$', RvdW: '$206\\text{pm}$', elctrNeg: '2.05', OxN: '$+3, +5, -3$', alotrops: '$\\mathrm{Sb}$ (فلزی)، $\\mathrm{Sb}$ (آمورف زرد)', discvrr: 'از دوران باستان شناخته شده است.', discvrDate: 'ماقبل تاریخ', naming: '-', block: 'p', 
+            d: 'در باستان به عنوان خط چشم استفاده می‌شد.' },
+            { n : 52, s : 'Te', m: '127.60', c: 'metalloid', st: 'solid', name: 'تلوریوم', nameEng: 'Tellurium', density: '$6.24 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$449^{\\circ}\\text{C}$', bp: '$988^{\\circ}\\text{C}$', istops: '$^{126}\\mathrm{Te}, ^{128}\\mathrm{Te}, ^{130}\\mathrm{Te}$', RAtm: '$142\\text{pm}$', RvdW: '$206\\text{pm}$', elctrNeg: '2.1', OxN: '$-2, +4, +6$', alotrops: '-', discvrr: 'Franz-Joseph Müller von Reichenstein', discvrDate: '1782', naming: 'Martin Heinrich Klaproth', block: 'p', 
+            d: 'در ساخت پنل‌های خورشیدی پیشرفته کاربرد دارد.' },
+            { n : 53, s : 'I', m: '126.90', c: 'halogen', st: 'solid', name: 'ید', nameEng: 'Iodine', density: '$4.933 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$113^{\\circ}\\text{C}$', bp: '$184^{\\circ}\\text{C}$', istops: '$^{127}\\mathrm{I}$', RAtm: '$133\\text{pm}$', RvdW: '$198\\text{pm}$', elctrNeg: '2.66', OxN: '$-1, +1, +5, +7$', alotrops: '$\\mathrm{I}_2$', discvrr: 'Bernard Courtois', discvrDate: '1811', naming: 'Joseph Louis Gay-Lussac', block: 'p', 
+            d: 'عنصری ضروری برای عملکرد غده تیروئید.' },
+            { n : 54, s : 'Xe', m: '131.29', c: 'noble-gas', st: 'gas', name: 'زنون', nameEng: 'Xenon', density: '$5.89 \\frac{\\text{g}}{\\text{L}}$', mp: '$-111.7^{\\circ}\\text{C}$', bp: '$-108.1^{\\circ}\\text{C}$', istops: '$^{129}\\mathrm{Xe}, ^{131}\\mathrm{Xe}, ^{132}\\mathrm{Xe}, ^{134}\\mathrm{Xe}, ^{136}\\mathrm{Xe}$', RAtm: '$108\\text{pm}$', RvdW: '$216\\text{pm}$', elctrNeg: '2.6', OxN: '0', alotrops: '-', discvrr: 'William Ramsay, Morris Travers', discvrDate: '1898', naming: 'William Ramsay', block: 'p', 
+            d: 'در لامپ‌های جلوی خودروهای لوکس و موتورهای یونی ماهواره استفاده می‌شود.' },
+            { n : 55, s : 'Cs', m: '132.91', c: 'alkali-metal', st: 'solid', name: 'سزیوم', nameEng: 'Caesium', density: '$1.93 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$28.5^{\\circ}\\text{C}$', bp: '$671^{\\circ}\\text{C}$', istops: '$^{133}\\mathrm{Cs}$', RAtm: '$265\\text{pm}$', RvdW: '$343\\text{pm}$', elctrNeg: '0.79', OxN: '$+1$', alotrops: '-', discvrr: 'Robert Bunsen, Gustav Kirchhoff', discvrDate: '1860', naming: 'Robert Bunsen', block: 's', 
+            d: 'تعریف دقیق ثانیه در ساعت‌های اتمی بر اساس ارتعاشات این عنصر است.' },
+            { n : 56, s : 'Ba', m: '137.33', c: 'alkaline-earth', st: 'solid', name: 'باریوم', nameEng: 'Barium', density: '$3.62 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$727^{\\circ}\\text{C}$', bp: '$1897^{\\circ}\\text{C}$', istops: '$^{138}\\mathrm{Ba}$', RAtm: '$215\\text{pm}$', RvdW: '$268\\text{pm}$', elctrNeg: '0.89', OxN: '$+2$', alotrops: '-', discvrr: 'Carl Wilhelm Scheele', discvrDate: '1772', naming: 'Humphry Davy', block: 's', 
+            d: 'در تصویربرداری پزشکی از دستگاه گوارش (بلع باریوم) استفاده می‌شود.' },
+            { n : 57, s : 'La', m: '138.91', c: 'lanthanide', st: 'solid', name: 'لانتان', nameEng: 'Lanthanum', density: '$6.15 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$920^{\\circ}\\text{C}$', bp: '$3464^{\\circ}\\text{C}$', istops: '$^{139}\\mathrm{La}$', RAtm: '$187\\text{pm}$', RvdW: '$240\\text{pm}$', elctrNeg: '1.10', OxN: '$+3$', alotrops: '-', discvrr: 'Carl Gustaf Mosander', discvrDate: '1838', naming: 'Carl Gustaf Mosander', block: 'f', d: 'سرگروه خانواده لانتانیدها و مورد استفاده در لنزهای دوربین.' },
+            { n : 58, s : 'Ce', m: '140.12', c: 'lanthanide', st: 'solid', name: 'سریم', nameEng: 'Cerium', density: '$6.77 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$795^{\\circ}\\text{C}$', bp: '$3443^{\\circ}\\text{C}$', istops: '$^{140}\\mathrm{Ce}, ^{142}\\mathrm{Ce}$', RAtm: '$181\\text{pm}$', RvdW: '$235\\text{pm}$', elctrNeg: '1.12', OxN: '$+3, +4$', alotrops: '$\\alpha, \\beta, \\gamma, \\delta\\text{-Ce}$', discvrr: 'Jöns Jacob Berzelius', discvrDate: '1803', naming: 'Wilhelm Hisinger', block: 'f', d: 'فراوان‌ترین عنصر در بین لانتانیدها.' },
+            { n : 59, s : 'Pr', m: '140.91', c: 'lanthanide', st: 'solid', name: 'پرازئودیمیم', nameEng: 'Praseodymium', density: '$6.77 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$931^{\\circ}\\text{C}$', bp: '$3520^{\\circ}\\text{C}$', istops: '$^{141}\\mathrm{Pr}$', RAtm: '$182\\text{pm}$', RvdW: '$239\\text{pm}$', elctrNeg: '1.13', OxN: '$+3, +4$', alotrops: '-', discvrr: 'Carl Auer von Welsbach', discvrDate: '1885', naming: 'Carl Auer von Welsbach', block: 'f', d: 'برای ایجاد رنگ زرد در شیشه‌ها و لعاب‌ها استفاده می‌شود.' },
+            { n : 60, s : 'Nd', m: '144.24', c: 'lanthanide', st: 'solid', name: 'نئودیمیم', nameEng: 'Neodymium', density: '$7.01 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1021^{\\circ}\\text{C}$', bp: '$3074^{\\circ}\\text{C}$', istops: '$^{142}\\mathrm{Nd}, ^{144}\\mathrm{Nd}$', RAtm: '$181\\text{pm}$', RvdW: '$229\\text{pm}$', elctrNeg: '1.14', OxN: '$+3$', alotrops: '-', discvrr: 'Carl Auer von Welsbach', discvrDate: '1885', naming: 'Carl Auer von Welsbach', block: 'f', d: 'برای ساخت قوی‌ترین آهنرباهای دائمی جهان به کار می‌رود.' },
+            { n : 61, s : 'Pm', m: '(145)', c: 'lanthanide', st: 'solid', ra: true, name: 'پرومتیوم', nameEng: 'Promethium', density: '$7.26 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1042^{\\circ}\\text{C}$', bp: '$3000^{\\circ}\\text{C}$', istops: '$^{145}\\mathrm{Pm}$', RAtm: '$183\\text{pm}$', RvdW: '$236\\text{pm}$', elctrNeg: '1.13', OxN: '$+3$', alotrops: '-', discvrr: 'چین-شیونگ وو و همکاران', discvrDate: '1945', naming: 'Grace Mary Botley', block: 'f', d: 'تنها لانتانید رادیواکتیو که در طبیعت بسیار کمیاب است.' },
+            { n : 62, s : 'Sm', m: '150.36', c: 'lanthanide', st: 'solid', name: 'ساماریوم', nameEng: 'Samarium', density: '$7.52 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1072^{\\circ}\\text{C}$', bp: '$1794^{\\circ}\\text{C}$', istops: '$^{152}\\mathrm{Sm}, ^{154}\\mathrm{Sm}$', RAtm: '$180\\text{pm}$', RvdW: '$229\\text{pm}$', elctrNeg: '1.17', OxN: '$+3, +2$', alotrops: '-', discvrr: 'Lecoq de Boisbaudran', discvrDate: '1879', naming: 'Lecoq de Boisbaudran', block: 'f', d: 'در آهنرباهای مقاوم به دمای بالا استفاده می‌شود.' },
+            { n : 63, s : 'Eu', m: '151.96', c: 'lanthanide', st: 'solid', name: 'اروپیم', nameEng: 'Europium', density: '$5.24 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$822^{\\circ}\\text{C}$', bp: '$1529^{\\circ}\\text{C}$', istops: '$^{151}\\mathrm{Eu}, ^{153}\\mathrm{Eu}$', RAtm: '$199\\text{pm}$', RvdW: '$233\\text{pm}$', elctrNeg: '1.2', OxN: '$+3, +2$', alotrops: '-', discvrr: 'Eugène-Anatole Demarçay', discvrDate: '1901', naming: 'Eugène-Anatole Demarçay', block: 'f', d: 'برای تولید رنگ قرمز در صفحات نمایش (CRT و LED) حیاتی است.' },
+            { n : 64, s : 'Gd', m: '157.25', c: 'lanthanide', st: 'solid', name: 'گادولینیوم', nameEng: 'Gadolinium', density: '$7.90 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1313^{\\circ}\\text{C}$', bp: '$3273^{\\circ}\\text{C}$', istops: '$^{158}\\mathrm{Gd}, ^{160}\\mathrm{Gd}$', RAtm: '$179\\text{pm}$', RvdW: '$237\\text{pm}$', elctrNeg: '1.2', OxN: '$+3$', alotrops: '-', discvrr: 'Jean Charles Galissard de Marignac', discvrDate: '1880', naming: 'Johan Gadolin', block: 'f', d: 'به عنوان عامل کنتراست در تصویربرداری MRI استفاده می‌شود.' },
+            { n : 65, s : 'Tb', m: '158.93', c: 'lanthanide', st: 'solid', name: 'تربیوم', nameEng: 'Terbium', density: '$8.23 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1356^{\\circ}\\text{C}$', bp: '$3230^{\\circ}\\text{C}$', istops: '$^{159}\\mathrm{Tb}$', RAtm: '$178\\text{pm}$', RvdW: '$221\\text{pm}$', elctrNeg: '1.1', OxN: '$+3, +4$', alotrops: '-', discvrr: 'Carl Gustaf Mosander', discvrDate: '1843', naming: 'Carl Gustaf Mosander', block: 'f', d: 'در لامپ‌های کم‌مصرف برای ایجاد نور سبز فسفری کاربرد دارد.' },
+            { n : 66, s : 'Dy', m: '162.50', c: 'lanthanide', st: 'solid', name: 'دیسپروزیم', nameEng: 'Dysprosium', density: '$8.54 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1412^{\\circ}\\text{C}$', bp: '$2567^{\\circ}\\text{C}$', istops: '$^{164}\\mathrm{Dy}$', RAtm: '$177\\text{pm}$', RvdW: '$229\\text{pm}$', elctrNeg: '1.22', OxN: '$+3$', alotrops: '-', discvrr: 'Lecoq de Boisbaudran', discvrDate: '1886', naming: 'Lecoq de Boisbaudran', block: 'f', d: 'نام آن از واژه یونانی "dysprositos" به معنای "دیریافتنی" گرفته شده است.' },
+            { n : 67, s : 'Ho', m: '164.93', c: 'lanthanide', st: 'solid', name: 'هولمیم', nameEng: 'Holmium', density: '$8.79 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1474^{\\circ}\\text{C}$', bp: '$2700^{\\circ}\\text{C}$', istops: '$^{165}\\mathrm{Ho}$', RAtm: '$176\\text{pm}$', RvdW: '$216\\text{pm}$', elctrNeg: '1.23', OxN: '$+3$', alotrops: '-', discvrr: 'Per Teodor Cleve', discvrDate: '1878', naming: 'Per Teodor Cleve', block: 'f', d: 'دارای بالاترین قدرت مغناطیسی در بین تمام عناصر است.' },
+            { n : 68, s : 'Er', m: '167.26', c: 'lanthanide', st: 'solid', name: 'اربیوم', nameEng: 'Erbium', density: '$9.07 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1529^{\\circ}\\text{C}$', bp: '$2868^{\\circ}\\text{C}$', istops: '$^{166}\\mathrm{Er}, ^{168}\\mathrm{Er}$', RAtm: '$175\\text{pm}$', RvdW: '$235\\text{pm}$', elctrNeg: '1.24', OxN: '$+3$', alotrops: '-', discvrr: 'Carl Gustaf Mosander', discvrDate: '1843', naming: 'Carl Gustaf Mosander', block: 'f', d: 'در تقویت‌کننده‌های فیبر نوری برای اینترنت پرسرعت استفاده می‌شود.' },
+            { n : 69, s : 'Tm', m: '168.93', c: 'lanthanide', st: 'solid', name: 'تولیوم', nameEng: 'Thulium', density: '$9.32 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1545^{\\circ}\\text{C}$', bp: '$1950^{\\circ}\\text{C}$', istops: '$^{169}\\mathrm{Tm}$', RAtm: '$174\\text{pm}$', RvdW: '$227\\text{pm}$', elctrNeg: '1.25', OxN: '$+3, +2$', alotrops: '-', discvrr: 'Per Teodor Cleve', discvrDate: '1879', naming: 'Per Teodor Cleve', block: 'f', d: 'کمیاب‌ترین لانتانید غیر رادیواکتیو.' },
+            { n : 70, s : 'Yb', m: '173.05', c: 'lanthanide', st: 'solid', name: 'ایتربیم', nameEng: 'Ytterbium', density: '$6.90 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$824^{\\circ}\\text{C}$', bp: '$1196^{\\circ}\\text{C}$', istops: '$^{174}\\mathrm{Yb}$', RAtm: '$174\\text{pm}$', RvdW: '$242\\text{pm}$', elctrNeg: '1.1', OxN: '$+3, +2$', alotrops: '-', discvrr: 'Jean Charles Galissard de Marignac', discvrDate: '1878', naming: 'Jean Charles Galissard de Marignac', block: 'f', d: 'در ساعت‌های اتمی فوق دقیق و لیزرهای خاص کاربرد دارد.' },
+            { n : 71, s : 'Lu', m: '174.97', c: 'lanthanide', st: 'solid', name: 'لوتتیم', nameEng: 'Lutetium', density: '$9.84 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1663^{\\circ}\\text{C}$', bp: '$3402^{\\circ}\\text{C}$', istops: '$^{175}\\mathrm{Lu}$', RAtm: '$173\\text{pm}$', RvdW: '$221\\text{pm}$', elctrNeg: '1.27', OxN: '$+3$', alotrops: '-', discvrr: 'Georges Urbain, Carl Auer von Welsbach', discvrDate: '1907', naming: 'Georges Urbain', block: 'd', d: 'سخت‌ترین و چگال‌ترین عنصر در بین لانتانیدها.' },
+            { n : 72, s : 'Hf', m: '178.49', c: 'transition-metal', st: 'solid', name: 'هافنیوم', nameEng: 'Hafnium', density: '$13.31 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2233^{\\circ}\\text{C}$', bp: '$4603^{\\circ}\\text{C}$', istops: '$^{178}\\mathrm{Hf}, ^{180}\\mathrm{Hf}$', RAtm: '$159\\text{pm}$', RvdW: '$212\\text{pm}$', elctrNeg: '1.3', OxN: '$+4$', alotrops: '-', discvrr: 'Dirk Coster, George de Hevesy', discvrDate: '1923', naming: 'Dirk Coster', block: 'd', d: 'در میله‌های کنترل رآکتورهای هسته‌ای زیردریایی‌ها استفاده می‌شود.' },
+            { n : 73, s : 'Ta', m: '180.95', c: 'transition-metal', st: 'solid', name: 'تانتال', nameEng: 'Tantalum', density: '$16.69 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$3017^{\\circ}\\text{C}$', bp: '$5458^{\\circ}\\text{C}$', istops: '$^{181}\\mathrm{Ta}$', RAtm: '$146\\text{pm}$', RvdW: '$217\\text{pm}$', elctrNeg: '1.5', OxN: '$+5$', alotrops: '-', discvrr: 'Anders Gustaf Ekeberg', discvrDate: '1802', naming: 'Anders Gustaf Ekeberg', block: 'd', d: 'به دلیل مقاومت بالا در برابر خوردگی، در خازن‌های موبایل کاربرد دارد.' },
+            { n : 74, s : 'W', m: '183.84', c: 'transition-metal', st: 'solid', name: 'تنگستن', nameEng: 'Tungsten', density: '$19.25 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$3422^{\\circ}\\text{C}$', bp: '$5555^{\\circ}\\text{C}$', istops: '$^{182}\\mathrm{W}, ^{184}\\mathrm{W}, ^{186}\\mathrm{W}$', RAtm: '$139\\text{pm}$', RvdW: '$210\\text{pm}$', elctrNeg: '2.36', OxN: '$+6$', alotrops: '-', discvrr: 'Carl Wilhelm Scheele', discvrDate: '1781', naming: 'Juan José, Fausto Elhuyar', block: 'd', d: 'دارای بالاترین نقطه ذوب در بین تمام فلزات خالص است.' },
+            { n : 75, s : 'Re', m: '186.21', c: 'transition-metal', st: 'solid', name: 'رنیوم', nameEng: 'Rhenium', density: '$21.02 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$3186^{\\circ}\\text{C}$', bp: '$5596^{\\circ}\\text{C}$', istops: '$^{185}\\mathrm{Re}, ^{187}\\mathrm{Re}$', RAtm: '$137\\text{pm}$', RvdW: '$217\\text{pm}$', elctrNeg: '1.9', OxN: '$+7, +4$', alotrops: '-', discvrr: 'Walter Noddack, Ida Tacke', discvrDate: '1925', naming: 'Walter Noddack', block: 'd', d: 'یکی از کمیاب‌ترین عناصر پوسته زمین.' },
+            { n : 76, s : 'Os', m: '190.23', c: 'transition-metal', st: 'solid', name: 'اسمیوم', nameEng: 'Osmium', density: '$22.59 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$3033^{\\circ}\\text{C}$', bp: '$5012^{\\circ}\\text{C}$', istops: '$^{192}\\mathrm{Os}$', RAtm: '$135\\text{pm}$', RvdW: '$216\\text{pm}$', elctrNeg: '2.2', OxN: '$+4, +8$', alotrops: '-', discvrr: 'Smithson Tennant', discvrDate: '1803', naming: 'Smithson Tennant', block: 'd', d: 'چگال‌ترین (سنگین‌ترین) عنصر طبیعی روی زمین.' },
+            { n : 77, s : 'Ir', m: '192.22', c: 'transition-metal', st: 'solid', name: 'ایریدیوم', nameEng: 'Iridium', density: '$22.56 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2446^{\\circ}\\text{C}$', bp: '$4428^{\\circ}\\text{C}$', istops: '$^{191}\\mathrm{Ir}, ^{193}\\mathrm{Ir}$', RAtm: '$136\\text{pm}$', RvdW: '$202\\text{pm}$', elctrNeg: '2.2', OxN: '$+3, +4$', alotrops: '-', discvrr: 'Smithson Tennant', discvrDate: '1803', naming: 'Smithson Tennant', block: 'd', d: 'مقاوم‌ترین فلز در برابر خوردگی؛ در نوک خودنویس‌های لوکس استفاده می‌شود.' },
+            { n : 78, s : 'Pt', m: '195.08', c: 'transition-metal', st: 'solid', name: 'پلاتین', nameEng: 'Platinum', density: '$21.45 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1768^{\\circ}\\text{C}$', bp: '$3825^{\\circ}\\text{C}$', istops: '$^{195}\\mathrm{Pt}$', RAtm: '$139\\text{pm}$', RvdW: '$175\\text{pm}$', elctrNeg: '2.28', OxN: '$+4, +2$', alotrops: '-', discvrr: 'Antonio de Ulloa', discvrDate: '1735', naming: '-', block: 'd', d: 'به عنوان کاتالیزور در اگزوز خودروها برای کاهش آلودگی استفاده می‌شود.' },
+            { n : 79, s : 'Au', m: '196.97', c: 'transition-metal', st: 'solid', name: 'طلا', nameEng: 'Gold', density: '$19.3 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1064^{\\circ}\\text{C}$', bp: '$2856^{\\circ}\\text{C}$', istops: '$^{197}\\mathrm{Au}$', RAtm: '$144\\text{pm}$', RvdW: '$166\\text{pm}$', elctrNeg: '2.54', OxN: '$+3, +1$', alotrops: '-', discvrr: 'دوران باستان', discvrDate: 'قبل از 3000 سال قبل از میلاد', naming: '-', block: 'd', d: 'شکل‌پذیرترین فلز جهان؛ یک گرم آن را می‌توان تا ۳ کیلومتر کشید.' },
+            { n : 80, s : 'Hg', m: '200.59', c: 'transition-metal', st: 'liquid', name: 'جیوه', nameEng: 'Mercury', density: '$13.53 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$-38.8^{\\circ}\\text{C}$', bp: '$356.7^{\\circ}\\text{C}$', istops: '$^{202}\\mathrm{Hg}$', RAtm: '$151\\text{pm}$', RvdW: '$155\\text{pm}$', elctrNeg: '2.00', OxN: '$+2, +1$', alotrops: '-', discvrr: 'دوران باستان', discvrDate: 'قبل از 1500 ق.م', naming: '-', block: 'd', d: 'تنها فلزی که در دمای اتاق مایع است و به شدت سمی است.' },
+            { n : 81, s : 'Tl', m: '204.38', c: 'post-transition', st: 'solid', name: 'تالیوم', nameEng: 'Thallium', density: '$11.85 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$304^{\\circ}\\text{C}$', bp: '$1473^{\\circ}\\text{C}$', istops: '$^{203}\\mathrm{Tl}, ^{205}\\mathrm{Tl}$', RAtm: '$170\\text{pm}$', RvdW: '$196\\text{pm}$', elctrNeg: '1.62', OxN: '$+1, +3$', alotrops: '-', discvrr: 'William Crookes', discvrDate: '1861', naming: 'William Crookes', block: 'p', d: 'در گذشته به عنوان سم موش استفاده می‌شد و بسیار خطرناک است.' },
+            { n : 82, s : 'Pb', m: '207.2', c: 'post-transition', st: 'solid', name: 'سرب', nameEng: 'Lead', density: '$11.34 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$327^{\\circ}\\text{C}$', bp: '$1749^{\\circ}\\text{C}$', istops: '$^{206}\\mathrm{Pb}, ^{207}\\mathrm{Pb}, ^{208}\\mathrm{Pb}$', RAtm: '$146\\text{pm}$', RvdW: '$202\\text{pm}$', elctrNeg: '2.33', OxN: '$+2, +4$', alotrops: '-', discvrr: 'دوران باستان', discvrDate: 'قبل از 7000 سال قبل از میلاد', naming: '-', block: 'p', d: 'به عنوان محافظ در برابر اشعه ایکس و در باتری‌های خودرو کاربرد دارد.' },
+            { n : 83, s : 'Bi', m: '208.98', c: 'post-transition', st: 'solid', name: 'بیسموت', nameEng: 'Bismuth', density: '$9.78 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$271.4^{\\circ}\\text{C}$', bp: '$1564^{\\circ}\\text{C}$', istops: '$^{209}\\mathrm{Bi}$', RAtm: '$148\\text{pm}$', RvdW: '$207\\text{pm}$', elctrNeg: '2.02', OxN: '$+3, +5$', alotrops: '-', discvrr: 'Claude François Geoffroy', discvrDate: '1753', naming: '-', block: 'p', d: 'سنگین‌ترین عنصری که به طور موثر پایدار در نظر گرفته می‌شود.' },
+            { n : 84, s : 'Po', m: '(209)', c: 'metalloid', st: 'solid', ra: true, name: 'پولونیوم', nameEng: 'Polonium', density: '$9.20 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$254^{\\circ}\\text{C}$', bp: '$962^{\\circ}\\text{C}$', istops: '$^{209}\\mathrm{Po}, ^{210}\\mathrm{Po}$', RAtm: '$140\\text{pm}$', RvdW: '$197\\text{pm}$', elctrNeg: '2.0', OxN: '$+2, +4$', alotrops: '$\\alpha, \\beta\\text{-Po}$', discvrr: 'Marie and Pierre Curie', discvrDate: '1898', naming: 'Marie Curie', block: 'p', d: 'بسیار رادیواکتیو؛ ماری کوری آن را به نام وطنش لهستان نامید.' },
+            { n : 85, s : 'At', m: '(210)', c: 'halogen', st: 'solid', ra: true, name: 'استاتین', nameEng: 'Astatine', density: '$7 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$302^{\\circ}\\text{C}$', bp: '$337^{\\circ}\\text{C}$', istops: '$^{210}\\mathrm{At}, ^{211}\\mathrm{At}$', RAtm: '$150\\text{pm}$', RvdW: '$202\\text{pm}$', elctrNeg: '2.2', OxN: '$-1, +1, +3, +5$', alotrops: '-', discvrr: 'دِیل ریموند کورسون و همکاران', discvrDate: '1940', naming: 'Dale R. Corson', block: 'p', d: 'کمیاب‌ترین عنصر طبیعی در پوسته زمین (کمتر از ۳۰ گرم در کل جهان).' },
+            { n : 86, s : 'Rn', m: '(222)', c: 'noble-gas', st: 'gas', ra: true, name: 'رادون', nameEng: 'Radon', density: '$9.73 \\frac{\\text{g}}{\\text{L}}$', mp: '$-71^{\\circ}\\text{C}$', bp: '$-61.7^{\\circ}\\text{C}$', istops: '$^{222}\\mathrm{Rn}$', RAtm: '$120\\text{pm}$', RvdW: '$220\\text{pm}$', elctrNeg: '2.2', OxN: '0', alotrops: '-', discvrr: 'Friedrich Ernst Dorn', discvrDate: '1900', naming: 'Friedrich Ernst Dorn', block: 'p', d: 'گاز رادیواکتیوی که از تجزیه اورانیوم در خاک تولید می‌شود.' },
+            { n : 87, s : 'Fr', m: '(223)', c: 'alkali-metal', st: 'solid', ra: true, name: 'فرانسیم', nameEng: 'Francium', density: '$1.87 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$27^{\\circ}\\text{C}$', bp: '$677^{\\circ}\\text{C}$', istops: '$^{223}\\mathrm{Fr}$', RAtm: '$260\\text{pm}$', RvdW: '$348\\text{pm}$', elctrNeg: '0.7', OxN: '$+1$', alotrops: '-', discvrr: 'Marguerite Perey', discvrDate: '1939', naming: 'Marguerite Perey', block: 's', d: 'دومین عنصر کمیاب در طبیعت؛ به شدت ناپایدار است.' },
+            { n : 88, s : 'Ra', m: '(226)', c: 'alkaline-earth', st: 'solid', ra: true, name: 'رادیم', nameEng: 'Radium', density: '$5.5 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$700^{\\circ}\\text{C}$', bp: '$1737^{\\circ}\\text{C}$', istops: '$^{226}\\mathrm{Ra}$', RAtm: '$221\\text{pm}$', RvdW: '$283\\text{pm}$', elctrNeg: '0.9', OxN: '$+2$', alotrops: '-', discvrr: 'Marie and Pierre Curie', discvrDate: '1898', naming: 'Marie Curie', block: 's', d: 'در گذشته برای ساخت عقربه‌های شب‌تاب ساعت استفاده می‌شد.' },
+            { n : 89, s : 'Ac', m: '(227)', c: 'actinide', st: 'solid', ra: true, name: 'اکتینیم', nameEng: 'Actinium', density: '$10.07 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1050^{\\circ}\\text{C}$', bp: '$3198^{\\circ}\\text{C}$', istops: '$^{227}\\mathrm{Ac}$', RAtm: '$215\\text{pm}$', RvdW: '$260\\text{pm}$', elctrNeg: '1.1', OxN: '$+3$', alotrops: '-', discvrr: 'Friedrich Oskar Giesel', discvrDate: '1902', naming: 'André-Louis Debierne', block: 'f', d: 'در تاریکی نور آبی ضعیفی از خود ساطع می‌کند.' },
+            { n : 90, s : 'Th', m: '232.04', c: 'actinide', st: 'solid', ra: true, name: 'توریم', nameEng: 'Thorium', density: '$11.72 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1750^{\\circ}\\text{C}$', bp: '$4788^{\\circ}\\text{C}$', istops: '$^{232}\\mathrm{Th}$', RAtm: '$206\\text{pm}$', RvdW: '$237\\text{pm}$', elctrNeg: '1.3', OxN: '$+4$', alotrops: '-', discvrr: 'Jöns Jacob Berzelius', discvrDate: '1828', naming: 'Jöns Jacob Berzelius', block: 'f', d: 'به عنوان سوخت آینده در رآکتورهای هسته‌ای ایمن شناخته می‌شود.' },
+            { n : 91, s : 'Pa', m: '231.04', c: 'actinide', st: 'solid', ra: true, name: 'پروتاکتینیم', nameEng: 'Protactinium', density: '$15.37 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1568^{\\circ}\\text{C}$', bp: '$4000^{\\circ}\\text{C}$', istops: '$^{231}\\mathrm{Pa}$', RAtm: '$200\\text{pm}$', RvdW: '$243\\text{pm}$', elctrNeg: '1.5', OxN: '$+5, +4$', alotrops: '-', discvrr: 'Lise Meitner, Otto Hahn', discvrDate: '1917', naming: 'Otto Hahn', block: 'f', d: 'عنصری بسیار سمی و کمیاب که از تجزیه اورانیوم حاصل می‌شود.' },
+            { n : 92, s : 'U', m: '238.03', c: 'actinide', st: 'solid', ra: true, name: 'اورانیوم', nameEng: 'Uranium', density: '$18.95 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1132^{\\circ}\\text{C}$', bp: '$4131^{\\circ}\\text{C}$', istops: '$^{235}\\mathrm{U}, ^{238}\\mathrm{U}$', RAtm: '$196\\text{pm}$', RvdW: '$186\\text{pm}$', elctrNeg: '1.38', OxN: '$+3, +4, +5, +6$', alotrops: '$\\alpha, \\beta, \\gamma\\text{-U}$', discvrr: 'Martin Heinrich Klaproth', discvrDate: '1789', naming: 'Martin Heinrich Klaproth', block: 'f', d: 'اصلی‌ترین سوخت در نیروگاه‌های هسته‌ای تولید برق.' },
+            { n : 93, s : 'Np', m: '(237)', c: 'actinide', st: 'solid', ra: true, name: 'نپتونیم', nameEng: 'Neptunium', density: '$20.25 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$644^{\\circ}\\text{C}$', bp: '$3902^{\\circ}\\text{C}$', istops: '$^{237}\\mathrm{Np}$', RAtm: '$190\\text{pm}$', RvdW: '$221\\text{pm}$', elctrNeg: '1.36', OxN: '$+3, +4, +5, +6$', alotrops: '$\\alpha, \\beta, \\gamma\\text{-Np}$', discvrr: 'Edwin McMillan, Philip Abelson', discvrDate: '1940', naming: 'Edwin McMillan', block: 'f', d: 'اولین عنصر فرااورانیوم (Transuranium) ساخته شده.' },
+            { n : 94, s : 'Pu', m: '(244)', c: 'actinide', st: 'solid', ra: true, name: 'پلوتونیوم', nameEng: 'Plutonium', density: '$19.84 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$640^{\\circ}\\text{C}$', bp: '$3228^{\\circ}\\text{C}$', istops: '$^{239}\\mathrm{Pu}, ^{244}\\mathrm{Pu}$', RAtm: '$187\\text{pm}$', RvdW: '$243\\text{pm}$', elctrNeg: '1.28', OxN: '$+3, +4, +5, +6$', alotrops: '$\\alpha, \\beta, \\gamma, \\delta, \\delta^\\prime, \\epsilon\\text{-Pu}$', discvrr: 'گلن تئودور سیبورگ و همکاران', discvrDate: '1940', naming: 'Glenn T. Seaborg', block: 'f', d: 'در بمب‌های هسته‌ای و باتری‌های فضاپیماهای دوردست کاربرد دارد.' },
+            { n : 95, s : 'Am', m: '(243)', c: 'actinide', st: 'solid', ra: true, name: 'امریسیم', nameEng: 'Americium', density: '$13.67 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1176^{\\circ}\\text{C}$', bp: '$2607^{\\circ}\\text{C}$', istops: '$^{241}\\mathrm{Am}, ^{243}\\mathrm{Am}$', RAtm: '$180\\text{pm}$', RvdW: '$244\\text{pm}$', elctrNeg: '1.13', OxN: '$+3, +4, +5, +6$', alotrops: '-', discvrr: 'گلن تئودور سیبورگ و همکاران', discvrDate: '1944', naming: 'Glenn T. Seaborg', block: 'f', d: 'در سنسورهای تشخیص دود خانگی استفاده می‌شود.' },
+            { n : 96, s : 'Cm', m: '(247)', c: 'actinide', st: 'solid', ra: true, name: 'کوریم', nameEng: 'Curium', density: '$13.51 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1345^{\\circ}\\text{C}$', bp: '$3110^{\\circ}\\text{C}$', istops: '$^{247}\\mathrm{Cm}$', RAtm: '$174\\text{pm}$', RvdW: '$245\\text{pm}$', elctrNeg: '1.28', OxN: '$+3, +4$', alotrops: '-', discvrr: 'گلن تئودور سیبورگ و همکاران', discvrDate: '1944', naming: 'Glenn T. Seaborg', block: 'f', d: 'به افتخار ماری و پیر کوری نام‌گذاری شده است.' },
+            { n : 97, s : 'Bk', m: '(247)', c: 'actinide', st: 'solid', ra: true, name: 'برکلیم', nameEng: 'Berkelium', density: '$14.78 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$986^{\\circ}\\text{C}$', bp: '$2627^{\\circ}\\text{C}$', istops: '$^{247}\\mathrm{Bk}$', RAtm: '$170\\text{pm}$', RvdW: '$244\\text{pm}$', elctrNeg: '1.3', OxN: '$+3, +4$', alotrops: '-', discvrr: 'آزمایشگاه ملی لارنس برکلی', discvrDate: '1949', naming: 'Glenn T. Seaborg', block: 'f', d: 'نام آن از شهر برکلی کالیفرنیا گرفته شده است.' },
+            { n : 98, s : 'Cf', m: '(251)', c: 'actinide', st: 'solid', ra: true, name: 'کالیفرنیم', nameEng: 'Californium', density: '$15.1 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$900^{\\circ}\\text{C}$', bp: '$1470^{\\circ}\\text{C}$', istops: '$^{251}\\mathrm{Cf}, ^{252}\\mathrm{Cf}$', RAtm: '$186\\text{pm}$', RvdW: '$245\\text{pm}$', elctrNeg: '1.3', OxN: '$+3, +4$', alotrops: '-', discvrr: 'آزمایشگاه ملی لارنس برکلی', discvrDate: '1950', naming: 'Glenn T. Seaborg', block: 'f', d: 'یک منبع بسیار قوی نوترون برای شروع رآکتورها.' },
+            { n : 99, s : 'Es', m: '(252)', c: 'actinide', st: 'solid', ra: true, name: 'اینشتینیم', nameEng: 'Einsteinium', density: '$8.84 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$860^{\\circ}\\text{C}$', bp: '$996^{\\circ}\\text{C}$', istops: '$^{252}\\mathrm{Es}$', RAtm: '$186\\text{pm}$', RvdW: '$245\\text{pm}$', elctrNeg: '1.3', OxN: '$+3$', alotrops: '-', discvrr: 'آلبرت گیورسو و همکاران', discvrDate: '1952', naming: 'Albert Ghiorso', block: 'f', d: 'در بقایای اولین آزمایش بمب هیدروژنی کشف شد.' },
+            { n : 100, s : 'Fm', m: '(257)', c: 'actinide', st: 'solid', ra: true, name: 'فرمیم', nameEng: 'Fermium', density: '$(9.7) \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1527^{\\circ}\\text{C}$', bp: '-', istops: '$^{257}\\mathrm{Fm}$', RAtm: '-----', RvdW: '$245\\text{pm}$', elctrNeg: '$(1.3)$', OxN: '$+3$', alotrops: '-', discvrr: 'آلبرت گیورسو و همکاران', discvrDate: '1952', naming: 'Albert Ghiorso', block: 'f', d: 'سنگین‌ترین عنصری که با بمباران نوترونی تولید می‌شود.' },
+            { n : 101, s : 'Md', m: '(258)', c: 'actinide', st: 'solid', ra: true, name: 'مندلیفیم', nameEng: 'Mendelevium', density: '$(10.3) \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$827^{\\circ}\\text{C}$', bp: '-', istops: '$^{258}\\mathrm{Md}$', RAtm: '-----', RvdW: '$246\\text{pm}$', elctrNeg: '$(1.3)$', OxN: '$+2, +3$', alotrops: '-', discvrr: 'آزمایشگاه ملی لارنس برکلی', discvrDate: '1955', naming: 'Albert Ghiorso', block: 'f', d: 'به افتخار دیمیتری مندلیف، پدر جدول تناوبی، نامیده شد.' },
+            { n : 102, s : 'No', m: '(259)', c: 'actinide', st: 'solid', ra: true, name: 'نوبلیم', nameEng: 'Nobelium', density: '$(9.9) \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$827^{\\circ}\\text{C}$', bp: '-', istops: '$^{259}\\mathrm{No}$', RAtm: '-----', RvdW: '$246\\text{pm}$', elctrNeg: '$(1.3)$', OxN: '$+2, +3$', alotrops: '-', discvrr: 'Joint Institute for Nuclear Research', discvrDate: '1966', naming: 'Nobel Institute', block: 'f', d: 'به افتخار آلفرد نوبل نام‌گذاری شده است.' },
+            { n : 103, s : 'Lr', m: '(266)', c: 'actinide', st: 'solid', ra: true, name: 'لارنسیم', nameEng: 'Lawrencium', density: '$(14.4) \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$1627^{\\circ}\\text{C}$', bp: '-', istops: '$^{266}\\mathrm{Lr}$', RAtm: '-----', RvdW: '$246\\text{pm}$', elctrNeg: '$(1.3)$', OxN: '$+3$', alotrops: '-', discvrr: 'آلبرت گیورسو و همکاران', discvrDate: '1961', naming: 'Albert Ghiorso', block: 'd', d: 'آخرین عنصر از خانواده آکتینیدها.' },
+            { n : 104, s : 'Rf', m: '(267)', c: 'transition-metal', st: 'solid', ra: true, name: 'رادرفوردیم', nameEng: 'Rutherfordium', density: '$23.2 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$2100^{\\circ}\\text{C}$', bp: '$5500^{\\circ}\\text{C}$', istops: '$^{267}\\mathrm{Rf}$', RAtm: '$150\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+4$', alotrops: '-', discvrr: 'JINR / LBNL', discvrDate: '1964', naming: 'Ernest Rutherford', block: 'd', d: 'اولین عنصر فوق‌سنگین بلوک d.' },
+            { n : 105, s : 'Db', m: '(268)', c: 'transition-metal', st: 'solid', ra: true, name: 'دوبنیم', nameEng: 'Dubnium', density: '$29.3 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{268}\\mathrm{Db}$', RAtm: '$139\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+5$', alotrops: '-', discvrr: 'JINR / LBNL', discvrDate: '1968', naming: 'دوبنا، روسیه', block: 'd', d: 'نام‌گذاری شده به افتخار شهر دوبنا در روسیه.' },
+            { n : 106, s : 'Sg', m: '(269)', c: 'transition-metal', st: 'solid', ra: true, name: 'سیبورگیم', nameEng: 'Seaborgium', density: '$35.0 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{269}\\mathrm{Sg}$', RAtm: '$132\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+6$', alotrops: '-', discvrr: 'LBNL', discvrDate: '1974', naming: 'Glenn T. Seaborg', block: 'd', d: 'اولین عنصری که به افتخار یک دانشمند در زمان حیاتش نام‌گذاری شد.' },
+            { n : 107, s : 'Bh', m: '(270)', c: 'transition-metal', st: 'solid', ra: true, name: 'بوهریم', nameEng: 'Bohrium', density: '$37.1 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{270}\\mathrm{Bh}$', RAtm: '$128\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+7$', alotrops: '-', discvrr: 'GSI', discvrDate: '1981', naming: 'Niels Bohr', block: 'd', d: 'خواص شیمیایی آن مشابه عنصر رنیم پیش‌بینی می‌شود.' },
+            { n : 108, s : 'Hs', m: '(269)', c: 'transition-metal', st: 'solid', ra: true, name: 'هسیم', nameEng: 'Hassium', density: '$40.7 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{269}\\mathrm{Hs}$', RAtm: '$126\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+8$', alotrops: '-', discvrr: 'GSI', discvrDate: '1984', naming: 'هِسِن، آلمان', block: 'd', d: 'پیش‌بینی می‌شود چگال‌ترین عنصر جدول تناوبی باشد.' },
+            { n : 109, s : 'Mt', m: '(278)', c: 'transition-metal', st: 'solid', ra: true, name: 'مایتنریم', nameEng: 'Meitnerium', density: '$37.4 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{278}\\mathrm{Mt}$', RAtm: '$128\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+3$', alotrops: '-', discvrr: 'GSI', discvrDate: '1982', naming: 'Lise Meitner', block: 'd', d: 'به افتخار فیزیکدان زن، لیزه مایتنر، نام‌گذاری شده است.' },
+            { n : 110, s : 'Ds', m: '(281)', c: 'transition-metal', st: 'solid', ra: true, name: 'دارمشتادیم', nameEng: 'Darmstadtium', density: '$34.8 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{281}\\mathrm{Ds}$', RAtm: '$128\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+8$', alotrops: '-', discvrr: 'GSI', discvrDate: '1994', naming: 'دارمشتات، آلمان', block: 'd', d: 'در مرکز تحقیقات GSI در آلمان کشف شد.' },
+            { n : 111, s : 'Rg', m: '(282)', c: 'transition-metal', st: 'solid', ra: true, name: 'رونتگنیم', nameEng: 'Roentgenium', density: '$28.7 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '-', bp: '-', istops: '$^{282}\\mathrm{Rg}$', RAtm: '$121\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+3$', alotrops: '-', discvrr: 'GSI', discvrDate: '1994', naming: 'Wilhelm Röntgen', block: 'd', d: 'به افتخار کاشف اشعه ایکس نام‌گذاری شده است.' },
+            { n : 112, s : 'Cn', m: '(285)', c: 'transition-metal', st: 'احتمالاً مایع', ra: true, name: 'کوپرنیسیم', nameEng: 'Copernicium', density: '$23.7 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$10^{\\circ}\\text{C}$', bp: '$67^{\\circ}\\text{C}$', istops: '$^{285}\\mathrm{Cn}$', RAtm: '$122\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+2$', alotrops: '-', discvrr: 'GSI', discvrDate: '1996', naming: 'Nicolaus Copernicus', block: 'd', d: 'احتمالاً در دمای اتاق مایع یا یک گاز فرار است.' },
+            { n : 113, s : 'Nh', m: '(286)', c: 'post-transition', st: 'solid', ra: true, name: 'نیهونیم', nameEng: 'Nihonium', density: '$16 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$430^{\\circ}\\text{C}$', bp: '$1100^{\\circ}\\text{C}$', istops: '$^{286}\\mathrm{Nh}$', RAtm: '$136\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+1$', alotrops: '-', discvrr: 'RIKEN', discvrDate: '2003', naming: 'ژاپن (به ژاپنی 日本 - نیهون)', block: 'p', d: 'اولین عنصری که توسط دانشمندان آسیایی کشف و نام‌گذاری شد.' },
+            { n : 114, s : 'Fl', m: '(289)', c: 'post-transition', st: 'solid', ra: true, name: 'فلروویم', nameEng: 'Flerovium', density: '$14 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$70^{\\circ}\\text{C}$', bp: '$150^{\\circ}\\text{C}$', istops: '$^{289}\\mathrm{Fl}$', RAtm: '$143\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+2$', alotrops: '-', discvrr: 'JINR', discvrDate: '1998', naming: 'آزمایشگاه فلروف', block: 'p', d: 'پیش‌بینی می‌شد دارای خواص گاز نجیب باشد اما فلز است.' },
+            { n : 115, s : 'Mc', m: '(290)', c: 'post-transition', st: 'solid', ra: true, name: 'مسکوویم', nameEng: 'Moscovium', density: '$13.5 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$400^{\\circ}\\text{C}$', bp: '$1100^{\\circ}\\text{C}$', istops: '$^{290}\\mathrm{Mc}$', RAtm: '$162\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+1, +3$', alotrops: '-', discvrr: 'JINR / LLNL', discvrDate: '2003', naming: 'مسکو، روسیه', block: 'p', d: 'نام‌گذاری شده به افتخار منطقه مسکو.' },
+            { n : 116, s : 'Lv', m: '(293)', c: 'post-transition', st: 'solid', ra: true, name: 'لیورموریم', nameEng: 'Livermorium', density: '$12.9 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$437^{\\circ}\\text{C}$', bp: '$812^{\\circ}\\text{C}$', istops: '$^{293}\\mathrm{Lv}$', RAtm: '$175\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$+2, +4$', alotrops: '-', discvrr: 'JINR / LLNL', discvrDate: '2000', naming: 'لیورمور، کالیفرنیا', block: 'p', d: 'در همکاری بین دانشمندان روسیه و آمریکا کشف شد.' },
+            { n : 117, s : 'Ts', m: '(294)', c: 'halogen', st: 'solid', ra: true, name: 'تنسین', nameEng: 'Tennessine', density: '$7.2 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$400^{\\circ}\\text{C}$', bp: '$550^{\\circ}\\text{C}$', istops: '$^{294}\\mathrm{Ts}$', RAtm: '$156\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$-1, +1, +3, +5$', alotrops: '-', discvrr: 'JINR / LLNL', discvrDate: '2010', naming: 'تِنِسی، ایالت متحدهٔ آمریکا', block: 'p', d: 'دومین هالوژن مصنوعی و بسیار ناپایدار.' },
+            { n : 118, s : 'Og', m: '(294)', c: 'noble-gas', st: 'solid', ra: true, name: 'اوگانسون', nameEng: 'Oganesson', density: '$5.0 \\frac{\\text{g}}{\\text{cm}^3}$', mp: '$52^{\\circ}\\text{C}$', bp: '$80^{\\circ}\\text{C}$', istops: '$^{294}\\mathrm{Og}$', RAtm: '$157\\text{pm}$', RvdW: '-', elctrNeg: '-', OxN: '$0, +2, +4$', alotrops: '-', discvrr: 'JINR / LLNL', discvrDate: '2002', naming: 'Yuri Oganessian', block: 'p', d: 'آخرین عنصر جدول؛ احتمالاً در دمای اتاق جامد است برخلاف سایر گازهای نجیب.' },
+        ];
+
+        // تولید کامل لیست عناصر
+        let elementsData = [];
+        
+        function initData() {
+            // نگاشت داده‌های دستی
+            let manualData = {};
+            baseElements.forEach(e => manualData[e.n] = e);
+
+            const tableMap = [
+                {n:1, r:1, c:1}, {n:2, r:1, c:18},
+                {n:3, r:2, c:1}, {n:4, r:2, c:2}, {n:5, r:2, c:13}, {n:6, r:2, c:14}, {n:7, r:2, c:15}, {n:8, r:2, c:16}, {n:9, r:2, c:17}, {n:10, r:2, c:18},
+                {n:11, r:3, c:1}, {n:12, r:3, c:2}, {n:13, r:3, c:13}, {n:14, r:3, c:14}, {n:15, r:3, c:15}, {n:16, r:3, c:16}, {n:17, r:3, c:17}, {n:18, r:3, c:18}
+            ];
+            
+            let count = 19;
+            for(let c=1; c<=18; c++) tableMap.push({n:count++, r:4, c:c});
+            for(let c=1; c<=18; c++) tableMap.push({n:count++, r:5, c:c});
+            
+            tableMap.push({n:55, r:6, c:1}); tableMap.push({n:56, r:6, c:2});
+            count = 72; for(let c=4; c<=18; c++) tableMap.push({n:count++, r:6, c:c});
+            
+            tableMap.push({n:87, r:7, c:1}); tableMap.push({n:88, r:7, c:2});
+            count = 104; for(let c=4; c<=18; c++) tableMap.push({n:count++, r:7, c:c});
+            
+            count = 57; for(let c=4; c<=18; c++) { tableMap.push({n:count++, r:8, c:c-1}); }
+            count = 89; for(let c=4; c<=18; c++) { tableMap.push({n:count++, r:9, c:c-1}); }
+
+            function isLaAc(Z) {
+                if (57 <= Z && Z <= 71 || 89 <= Z && Z <= 103) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            tableMap.forEach(pos => {
+                let manual = manualData[pos.n];
+                let config = calculateElectronConfig(pos.n);
+                // Shells calculation
+                let shells = {};
+                config.forEach(c => { shells[c.n] = (shells[c.n] || 0) + c.count; });
+                let shellsArr = Object.values(shells);
+
+                elementsData.push({
+                    number: pos.n,
+                    row: pos.r,
+                    col: pos.c,
+                    period: isLaAc(pos.n) ? (pos.r)-2 : pos.r,
+                    group: isLaAc(pos.n) ? '-' : pos.c,
+                    symbol: manual.s,
+                    name: manual.name,
+                    nameEng: manual.nameEng,
+                    mass: manual.m,
+                    cat: manual.c,
+                    block: manual.block,
+                    state: manual.st,
+                    configList: config,
+                    shells: shellsArr,
+                    density: manual.density,
+                    mp: manual.mp,
+                    bp: manual.bp,
+                    isotopes: manual.istops,
+                    radiusAtm: manual.RAtm,
+                    radiusVDW: manual.RvdW,
+                    electronegativity: manual.elctrNeg,
+                    oxidationNum: manual.OxN,
+                    allotropes: manual.alotrops,
+                    discover: manual.discvrr,
+                    discoverDate: manual.discvrDate,
+                    naming: manual.naming,
+                    ra: manual ? manual.ra : false,
+                    img: manual.ra ? 'https://ana.ir/media/2050a599ZTp3ZWJwfGY6L2ZpbGVzL2ZhL25ld3MvMTQwMi8xMS8zLzQ0MzI3M18xMjAucG5nfGZ1aTo0MzQ0NTR8bDpmYXx2OjE.webp' : manual.img,
+                    desc: manual.d,
+                });
+            });
+        }
+
+        initData();
+
+        function getPeriodStartZ(period) {
+            switch(period) {
+                case 1: return 1;
+                case 2: return 3;
+                case 3: return 11;
+                case 4: return 19;
+                case 5: return 37;
+                case 6: return 55;
+                case 7: return 87;
+                case 8: return 55;
+                case 9: return 87;
+                default: return 1;
+            }
+        }
+
+        // --- رابط کاربری ---
+
+        let currentMode = 'standard';
+        const table = document.getElementById('periodicTable');
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('overlay');
+        const drawerTitle = document.getElementById('drawerTitle');
+        const drawerContent = document.getElementById('drawerContent');
+
+        // ساخت راهنما
+        const legendContainer = document.getElementById('legend');
+        legendContainer.innerHTML = '';
+        Object.entries(categoryNames).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.style.cursor = 'pointer';
+            item.innerHTML = `
+                <span>${value}</span>
+                <div class="legend-color" style="background: ${colorPalette[key]}"></div>
+            `;
+            legendContainer.appendChild(item);
+        });
+
+        function renderTable() {
+            table.innerHTML = '';
+            // --- اضافه کردن هدرها به گرید ---
+            // 1. گوشه خالی (0,0)
+            let corner = document.createElement('div');
+            corner.className = 'grid-header';
+            corner.style.gridRow = "1"; 
+            corner.style.gridColumn = "1";
+            table.appendChild(corner);
+
+            // 2. شماره گروه‌ها (1 تا 18) در سطر 1
+            for (let i = 1; i <= 18; i++) {
+                let h = document.createElement('div');
+                h.className = 'grid-header';
+                h.textContent = i;
+                h.style.gridRow = "1";
+                h.style.gridColumn = i + 1; // ستون 1 رزرو شده برای شماره دوره
+                table.appendChild(h);
+            }
+
+            // 3. شماره دوره‌ها (1 تا 7) در ستون 1
+            for (let i = 1; i <= 7; i++) {
+                let h = document.createElement('div');
+                h.className = 'grid-header';
+                h.textContent = i;
+                h.style.gridRow = i + 1; // سطر 1 رزرو شده برای شماره گروه
+                h.style.gridColumn = "1";
+                table.appendChild(h);
+            }
+
+            // --- رندر عناصر ---
+            elementsData.forEach(el => {
+                const div = document.createElement('div');
+                div.className = 'element';
+                let gridR = el.row + 1; // +1 بخاطر هدر
+                if (el.row >= 9) {
+                     gridR = el.row + 1;
+                     gridR = el.row + 1; 
+                }
+                div.style.gridRow = gridR;
+                div.style.gridColumn = el.col + 1; // +1 بخاطر هدر ستون
+                // تعیین رنگ
+                let color;
+                if (currentMode === 'block') {
+                    color = blockColors[el.block];
+                } else {
+                    color = colorPalette[el.cat];
+                }
+                div.style.borderBottom = `3px solid ${color}`;
+                div.style.color = 'var(--text-main)'; // Reset color
+                div.setAttribute('data-cat', el.cat);
+                div.setAttribute('data-catb', el.block);
+                if (currentMode === 'bohr') {
+                    div.onmouseenter = () => {
+                        div.style.border = `1px solid ${color}`
+                    };
+                } else {
+                    div.onmouseenter = () => {
+                        div.style.background = currentMode === 'block' ? `${color}33` : `${color}33`;
+                        div.style.border = `1px solid ${color}`
+                    };
+                }
+                div.onmouseleave = () => {
+                    div.style.background = 'var(--card-bg)';
+                    div.style.borderColor = 'var(--border-color)';
+                    div.style.borderBottom = `3px solid ${color}`;
+                };
+                div.onclick = () => openDrawer(el, color);
+
+                let content = '';
+                if (currentMode === 'standard' || currentMode === 'block') {
+                    content = `
+                        <div class="atomic-number">${el.number}</div>
+                        <div class="symbol" style="color:${color}">${el.symbol}</div>
+                        <div class="name">${el.name}</div>
+                        <div class="mass">${el.mass}</div>
+                    `;
+                } else if (currentMode === 'bohr') {
+                    content = `
+                        <div class="bohr-view">
+                            <canvas class="bohr-canvas" id="bohrCanvas${el.number}" width="380" height="380"></canvas>
+                        </div>
+                    `;
+                    div.classList.add('bohr-element');
+                } else if (currentMode === 'orbital') {
+                    content = `
+                        <div class="orbital-view">
+                            <div class="atomic-number" style="position: absolute; top: 4px; left: 4px; font-size: 0.5rem; color: var(--text-secondary);">${el.number}</div>
+                            <div class="symbol" style="color:${color}">${el.symbol}</div>
+                            <div class="orb" dir="ltr" style="font-size:0.65rem; opacity:0.9">$${orbitalTable(el.number)}$</div>
+                        </div>
+                    `;
+                } else if (currentMode === 'phase') {
+                    let icon = '❓';
+                    if (el.state === 'solid') icon = '🟫';
+                    if (el.state === 'liquid') icon = '💧';
+                    if (el.state === 'gas') icon = '☁️';
+                    content = `
+                        <div class="image-view">
+                            <span style="font-size:1.8rem; opacity:0.9;">${icon}</span>
+                            <span class="symbol" style="font-size:0.8rem; position:absolute; bottom:2px;">${el.symbol}</span>
+                        </div>
+                    `;
+                } else if (currentMode === 'image') {
+                    content = `
+                        <div class="image-view">
+                            <div class="atomic-number">${el.number}</div>
+                            <div class="img-symbol" style="color: ${color};">${el.symbol}</div>
+                            <img src="${el.img}" alt="${el.name}" style="max-width:100%; max-height: 36px; border-radius:5px;"/>
+                            <div class="name" style="position:absolute; bottom:2px;">${el.name}</div>
+                        </div>
+                    `;
+                    div.onmouseenter = () => {
+                        div.style.background = `${color}`;
+                        div.style.borderColor = color;
+                        div.querySelectorAll('.img-symbol, .atomic-number, .name').forEach(elm => {
+                            elm.classList.add('text-white');
+                        });
+                    };
+                    div.onmouseleave = () => {
+                        div.style.background = 'var(--card-bg)';
+                        div.querySelectorAll('.img-symbol, .atomic-number, .name').forEach(elm => {
+                            elm.classList.remove('text-white');
+                        });
+                        div.style.border = 'none';
+                        div.style.borderBottom = `3px solid ${color}`;
+                        div.querySelectorAll('.img-symbol').forEach(elm => {
+                            elm.style.color = `${color}`;
+                        });
+                    };
+                    div.style.background = 'var(--card-bg)';
+                    div.style.border = 'none';
+                    div.style.borderBottom = `3px solid ${color}`;
+                    div.classList.add('image-element');
+                }
+
+                div.innerHTML = content;
+                if (el.ra && currentMode !== 'image') div.innerHTML += `<span class="radioactive">☢</span>`;
+                table.appendChild(div);
+                if (window.renderMathInElement) { renderMathInElement(div, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] }); }
+            });
+            updateLegend();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.btn-mode').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.textContent.includes(getModeName(mode))) btn.classList.add('active');
+            });
+            renderTable();
+            if (mode === 'bohr') {
+                elementsData.forEach(el => {
+                    const color = colorPalette[el.cat];
+                    if(el.shells && el.shells.length > 0) {
+                        startBohr(document.getElementById('bohrCanvas' + el.number), el.symbol, el.shells, el.number, getPeriodStartZ(el.row), color);
+                    }
+                });
+            }
+        }
+
+        function getModeName(mode) {
+            if(mode === 'standard') return 'استاندارد';
+            if(mode === 'block') return 'بلوک';
+            if(mode === 'bohr') return 'بور';
+            if(mode === 'orbital') return 'اوربیتالی';
+            if(mode === 'phase') return 'حالت';
+            if(mode === 'image') return 'تصویر';
+            return '';
+        }
+
+        function updateLegend() {
+            legendContainer.innerHTML = '';
+            let source = currentMode === 'block' ? blockColors : colorPalette;
+            let names = currentMode === 'block' ? {'s':'دسته s', 'p':'دسته p', 'd':'دسته d', 'f':'دسته f'} : categoryNames;
+
+            for (const [key, hex] of Object.entries(source)) {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `${names[key]} <div class="legend-color" style="background:${hex}"></div>`;
+                let targets;
+                item.onmouseenter = () => {
+                    table.classList.add('highlight-mode');
+                    if (currentMode === 'block') {
+                        targets = document.querySelectorAll(`.element[data-catb="${key}"]`);
+                        targets.forEach(el => {
+                            el.classList.add('highlight');
+                            el.style.background = `${hex}`;
+                            el.querySelectorAll('.atomic-number, .symbol, .name, .mass').forEach(div => div.classList.add('text-white'));
+                        });
+                    } else {
+                        targets = document.querySelectorAll(`.element[data-cat="${key}"]`);
+                        if (currentMode !== 'bohr') {
+                            targets.forEach(el => {
+                                el.classList.add('highlight');
+                                el.style.background = `${hex}`;
+                                el.querySelectorAll('.atomic-number, .symbol, .name, .mass, .orb, .img-symbol').forEach(div => div.classList.add('text-white'));
+                            });
+                        } else {
+                            targets.forEach(el => {el.classList.add('highlight'); el.style.border = `1px solid ${hex}`; el.style.borderBottom = `3px solid ${hex}`;});
+                        }
+                    }
+                };
+
+                item.onmouseleave = () => {
+                    table.classList.remove('highlight-mode');
+                    document.querySelectorAll('.element.highlight').forEach(el => {
+                        el.classList.remove('highlight'); el.style.border = 'none';
+                        el.style.background = `var(--card-bg)`; el.style.borderBottom = `3px solid ${hex}`;
+                        el.querySelectorAll('.atomic-number, .symbol, .name, .mass, .orb, .img-symbol').forEach(div => div.classList.remove('text-white'));
+                    });
+                };
+                legendContainer.appendChild(item);
+            }
+        }
+
+        // انیمیشن کانواس
+        let animationFrameId;
+
+        function openDrawer(el, color) {
+            document.getElementById('drawerTitle').textContent = `${el.name} (${el.nameEng})`;
+            const content = document.getElementById('drawerContent');
+            // تولید رشته لاتک آرایش
+            const configLatex = getLatexElectronConfig(el.number);
+            // محتوای HTML
+            content.innerHTML = `
+                <div class="drawer-content">
+                    <div>
+                        <div Id="element-big-card" class="element-big-card" style="background: linear-gradient(135deg, ${color}aa, ${color});">
+                            <div class="big-number">${el.number}</div>
+                            <div class="big-symbol">${el.symbol}</div>
+                            <div class="big-name">${el.name}</div>
+                            <div id="massCardBig" style="margin-top:10px; font-size:1rem; opacity:0.9">$${el.mass}\\text{u}$</div>
+                        </div>
+                        <div class="bohr-container info-item">
+                            <div class="info-label">لایه های الکترونی</div>
+                            <canvas id="bohrCanvas" width="380" height="380"></canvas>
+                            <div id="orbitInfo"></div>
+                        </div>
+                    </div>
+
+                    <div class="details-container">
+                        <div class="section-title">اطلاعات عمومی</div>
+                        <div class="info-grid">
+                            <div class="info-item"><div class="info-label">گروه / دوره</div><div style="font-weight: 600;" class="info-value">${el.period < 8 ? el.group + ' / ' + el.period : '-'}</div></div>
+                            <div class="info-item"><div class="info-label">دسته</div><div dir="auto" style="font-weight: 600;" class="info-value">$${el.block}$</div></div>
+                            <div class="info-item"><div class="info-label">دسته‌بندی</div><div class="info-value" style="color:${color}; font-weight: 600;">${categoryNames[el.cat]}</div></div>
+                            <div class="info-item"><div class="info-label">فاز در شرایط استاندارد ($25^{\\circ}\\text{C}$)</div><div style="font-weight: 600;" class="info-value">${el.state === 'solid' ? 'جامد' : el.state === 'gas' ? 'گاز' : 'مایع'}</div></div>
+                        </div>
+
+                        <div class="section-title">ویژگی‌های فیزیکی</div>
+                        <div class="info-grid">
+                            <div class="info-item"><div class="info-label">چگالی</div><div class="info-value" dir="ltr">${el.density}</div></div>
+                            <div class="info-item"><div class="info-label">نقطه ذوب</div><div class="info-value" dir="ltr">${el.mp}</div></div>
+                            <div class="info-item"><div class="info-label">نقطه جوش</div><div class="info-value" dir="ltr">${el.bp}</div></div>
+                            <div class="info-item"><div class="info-label">ایزوتوپ‌ها</div><div class="info-value">${el.isotopes}</div></div>
+                        </div>
+
+                        <div class="section-title">ویژگی‌های شیمیایی و اتمی</div>
+                        <div Id="chemical-property" class="info-grid">
+                            <div class="info-item" style="grid-column: span 2;">
+                                <div class="info-label">آرایش الکترونی</div>
+                                <div class="info-value" id="configLatexContainer" dir="ltr" style="font-size:1.1rem;  padding:5px;"></div>
+                            </div>
+                            <div class="info-item"><div class="info-label">شعاع اتمی</div><div class="info-value" dir="ltr">${el.radiusAtm}</div></div>
+                            <div class="info-item"><div class="info-label">شعاع واندروالسی</div><div class="info-value" dir="ltr">${el.radiusVDW}</div></div>
+                            <div class="info-item"><div class="info-label">الکترونگاتیوی</div><div class="info-value" dir="ltr">${el.electronegativity}</div></div>
+                            <div class="info-item"><div class="info-label">عدد اکسایش</div><div class="info-value" dir="ltr">${el.oxidationNum}</div></div>
+                            <div class="info-item"><div class="info-label">آلوتروپ‌ها</div><div class="info-value">${el.allotropes}</div></div>
+                        </div>
+
+                        <div class="section-title">تاریخچه</div>
+                        <div class="info-grid">
+                            <div class="info-item"><div class="info-label">کاشف</div><div dir="auto" class="info-value">${el.discover}</div></div>
+                            <div class="info-item"><div class="info-label">سال کشف</div><div dir="auto" class="info-value">${el.discoverDate}</div></div>
+                            <div class="info-item"><div class="info-label">نامگذار</div><div dir="auto" class="info-value">${el.naming}</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-title" style="padding: 25px;">توضیحات</div>
+                <div class="description-box">
+                    ${el.desc}
+                </div>
+            `;
+            if (el.ra) {
+                document.getElementById('chemical-property').innerHTML += `<div class="info-item"><div class="info-label">رادیواکتیویته</div><div class="info-value">پرتوزا☢️</div></div>`;
+                document.getElementById('element-big-card').innerHTML += `<span class="radioactive-big">☢️</span>`;
+            };
+
+            // رندر کردن KaTeX
+            const resultEl = document.getElementById('configLatexContainer');
+            resultEl.innerHTML = `$${configLatex}$`;
+            if (window.renderMathInElement) {
+                renderMathInElement(resultEl, { delimiters: [{left: '$', right: '$', display: false}] });
+            }
+            if (window.renderMathInElement) { renderMathInElement(document.getElementById('drawer'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] }); }
+
+            // اجرای انیمیشن بور
+            drawBohr(el.shells);
+
+            drawer.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function getStateName(state) {
+            if(state === 'solid') return 'جامد';
+            if(state === 'liquid') return 'مایع';
+            if(state === 'gas') return 'گاز';
+            return 'ناشناخته';
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('active');
+            overlay.classList.remove('active');
+            // توقف انیمیشن برای جلوگیری از مصرف منابع
+            if(animationFrameId) cancelAnimationFrame(animationFrameId);
+        }
+
+        // --- انیمیشن مدل بور ---
+        function drawBohr(shells) {
+            const canvas = document.getElementById("bohrCanvas");
+            if(!canvas) return;
+            const padding = 40;
+            const maxRadius = 35 + (shells.length - 1) * 25;
+            const size = maxRadius * 2 + padding;
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext("2d");
+            const cx = canvas.width/2, cy = canvas.height/2;
+            let angle = 0;
+
+            // نمایش اطلاعات مداری در زیر کانواس
+            const orbitNames = ['اول', 'دوم', 'سوم', 'چهارم', 'پنجم', 'ششم', 'هفتم'];
+            document.getElementById("orbitInfo").innerHTML =
+                shells.map((n, i) => `<span>مدار ${orbitNames[i] || i+1}: <b>${n}</b></span>`).join(" | ");
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // هسته اتم
+                ctx.fillStyle = "#f87171";
+                ctx.beginPath();
+                ctx.arc(cx, cy, 10, 0, Math.PI*2);
+                ctx.fill();
+                
+                // درخشش هسته
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "#f87171";
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                shells.forEach((count, i) => {
+                    const r = 35 + i * 25; // شعاع مدار
+
+                    // رسم مدار
+                    ctx.strokeStyle = "rgba(128,128,128,0.3)";
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI*2);
+                    ctx.stroke();
+
+                    // رسم الکترون‌ها
+                    for(let e = 0; e < count; e++) {
+                        const speed = 0.005 + (1 / (i + 1)) * 0.01; 
+                        const a = angle * (i % 2 === 0 ? 1 : -1) * (2/(i+1)) + e * (2 * Math.PI / count); // چرخش معکوس یکی در میان
+                        
+                        const ex = cx + r * Math.cos(a);
+                        const ey = cy + r * Math.sin(a);
+
+                        ctx.fillStyle = "#38bdf8";
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, 3.5, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                });
+
+                angle += 0.015;
+                animationFrameId = requestAnimationFrame(animate);
+            }
+            
+            // اگر انیمیشن قبلی در جریان است متوقف شود
+            if(animationFrameId) cancelAnimationFrame(animationFrameId);
+            animate();
+        }
+
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        function startBohr(canvas, symbol, shells, Z, periodStartZ, color) {
+            const ctx = canvas.getContext("2d");
+            const cx = canvas.width/2, cy = canvas.height/2;
+            let t = 0;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // symbol
+                ctx.fillStyle = isDarkMode ? '#ffffff' : '#000000';
+                ctx.font = "22px Vazirmatn";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(symbol, cx, cy);
+
+                shells.forEach((count, i) => {
+                    let shrinkFactor;
+                    if (72 <= Z && Z <= 86 || 104 <= Z && Z <= 118) {
+                        shrinkFactor = 1 - (Z - 4 - periodStartZ) * 0.01;
+                    } else {
+                        shrinkFactor = 1 - (Z - periodStartZ) * 0.011;
+                    }
+                    const baseRadius = 35 + i * 25;
+                    const r = baseRadius * shrinkFactor;
+
+                    // رسم مدار
+                    ctx.strokeStyle = "rgba(128,128,128,0.3)";
+                    ctx.lineWidth = 4.5;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI*2);
+                    ctx.stroke();
+
+                    // رسم الکترون‌ها
+                    for(let e = 0; e < count; e++) {
+                        const dir = i % 2 === 0 ? 1 : -1;
+                        const speed = 0.005 + (2 / (i + 1)) * 0.01; 
+                        const a = t * (dir) * (speed)  + e * (2 * Math.PI / count); // چرخش معکوس یکی در میان
+                        
+                        const ex = cx + r * Math.cos(a);
+                        const ey = cy + r * Math.sin(a);
+
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, 5.5, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                });
+
+                t++;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // شروع برنامه
+        renderTable();
+
+    </script>
+</body>
+</html>
