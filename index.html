@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جدول تناوبی تعاملی عناصر</title>
-    <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
 <!-- فونت فارسی وزیرمتن -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css"/> -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css"/>
 <!-- کتابخانه KaTeX برای فرمول‌نویسی ریاضی -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous"> -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script> -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
     <link rel="stylesheet" href="libraries\tailwind-offline\tailwind.css">
     <link rel="stylesheet" href="libraries\katex\katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous">
     <script src="libraries\katex\katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
@@ -92,17 +92,21 @@
         }
         ol {list-style-type: persian;}
         ul, ol {
-            margin: 0.5em 0;
-            list-style-position: inside;
+            margin: 0.5em 0 !important;
+            padding: revert !important;
+            list-style: revert !important;
         }
+        /* بولت‌ها و شماره‌ها */
         ul li::marker, ol li::marker {
             color: #15803d; /* سبز تیره */
             font-weight: bold;
         }
+        /* فاصله و padding بین آیتم‌ها */
         ul li, ol li {
             margin-bottom: 0.3em;
             padding-right: 0.5rem;
         }
+        /* لیست‌های تو در تو */
         ul li ul, ol li ol {
             margin-top: 0.3em;
             margin-bottom: 0.3em;
