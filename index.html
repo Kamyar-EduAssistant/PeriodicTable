@@ -613,6 +613,16 @@
             {n:7, t:'s', c:2}, {n:5, t:'f', c:14}, {n:6, t:'d', c:10}, {n:7, t:'p', c:6}
         ];
 
+        const orbitalTypeOrder = { s: 0, p: 1, d: 2, f: 3 };
+
+        function byShell(a, b) {
+            return a.n - b.n || orbitalTypeOrder[a.type] - orbitalTypeOrder[b.type];
+        }
+
+        function sortedByShell(config) {
+            return [...config].sort(byShell);
+        }
+
         function calculateElectronConfig(Z) {
             const exceptions = {
                 24: "1s2 2s2 2p6 3s2 3p6 4s1 3d5",
@@ -685,8 +695,10 @@
             // حذف اوربیتال‌های هسته به‌صورت ساختاری
             let valence = full.slice(core.length);
 
+            const display = sortedByShell(valence);
+
             return `[\\mathrm{${noble.sym}}]\\,` +
-                valence.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+                display.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
         }
 
         function orbitalTable(Z) {
@@ -706,12 +718,14 @@
                 (Z >= 49 && Z <= 54) || 
                 (Z >= 71 && Z <= 86) || 
                 (Z >= 103 && Z <= 118);
+            const lastOrbital = valence[valence.length - 1];   // ← قبل از مرتب‌سازی
+            const display = sortedByShell(valence);
             let valenceLatex = "";
             if (shouldShorten) {
-                const lastOrbital = valence[valence.length - 1];
                 valenceLatex = "\\dots\\," + `${lastOrbital.n}${lastOrbital.type}^{${lastOrbital.count}}`;
             } else {
-                valenceLatex = `[\\mathrm{${noble.sym}}]\\,` + valence.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
+                valenceLatex = `[\\mathrm{${noble.sym}}]\\,` +
+                    display.map(o => `${o.n}${o.type}^{${o.count}}`).join('\\,');
             }
             return valenceLatex;
         }
