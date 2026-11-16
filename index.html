@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جدول تناوبی تعاملی عناصر</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<!--    <script src="https://cdn.tailwindcss.com"></script> -->
     <!-- فونت فارسی وزیرمتن -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+<!--    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css"/> -->
     <!-- کتابخانه KaTeX برای فرمول‌نویسی ریاضی -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
-    
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous"> -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script> -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script> -->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"> -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script> -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script> -->
+    <link rel="stylesheet" href="libraries\tailwind-offline\tailwind.css">
+    <link rel="stylesheet" href="libraries\katex\katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMckDpbCjaWr2Ugeh4/EGactnsCJO8e2i7gqY+2eJV6gwUqML" crossorigin="anonymous">
+    <script src="libraries\katex\katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script src="libraries\katex\auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
     <style>
         :root {
             --bg-color: #f3f4f6;
@@ -64,19 +68,19 @@
             width: 100%;
             padding: 15px;
             text-align: center;
-            background: var(--header-bg) !important;
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border-color) !important;
+            border-bottom: 1px solid var(--border-color);
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
         h1 {
             margin-bottom: 15px;
-            font-weight: 900 !important;
-            font-size: 2rem !important;
+            font-weight: 900;
+            font-size: 1.65em;
             background: linear-gradient(90deg, #3b82f6, #8b5cf6);
             -webkit-background-clip: text;
             background-clip: text;
@@ -86,8 +90,10 @@
         .text-white {
             color: #ffffff !important;
         }
+        ol {list-style-type: persian;}
         ul, ol {
-            margin: 0.5em 0 !important;
+            margin: 0.5em 0;
+            list-style-position: inside;
         }
         ul li::marker, ol li::marker {
             color: #15803d; /* سبز تیره */
@@ -95,16 +101,32 @@
         }
         ul li, ol li {
             margin-bottom: 0.3em;
-            padding-right: 1rem;
+            padding-right: 0.5rem;
         }
         ul li ul, ol li ol {
             margin-top: 0.3em;
             margin-bottom: 0.3em;
         }
-        .ai-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem; }
-        .ai-table th, .ai-table td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: right; }
-        .ai-table th { background-color: #f3f4f6; font-weight: bold; }
-        .ai-table tr:nth-child(even) { background-color: #f9fafb; }
+        .table-wrapper {
+            border-radius: 18px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 24px rgba(0, 0, 0, 0.125);
+        }
+        .ai-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .ai-table thead { background: linear-gradient(-45deg, #2b8b40, #009d3c); color: #fff; }
+        .ai-table th, .ai-table td { border-bottom: 1px solid #d1d5db; border-left: 1px solid #d1d5db; padding: 0.75rem; text-align: center; }
+        .ai-table th:last-child, .ai-table td:last-child { border-left: none; }
+        .ai-table tr:last-child td { border-bottom: none; }
+        .ai-table th { font-weight: bold; }
+        .ai-table tbody tr:nth-child(odd) { background-color: #ffffff; }
+        .ai-table tbody tr:nth-child(even) { background-color: #f7f7f7; }
+        .ai-table tbody tr:hover { background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.149); transform: translateY(-1px); transition: all .15s ease; }
+        .ai-table th:first-child {border-top-right-radius: 18px;}
+        .ai-table th:last-child {border-top-left-radius: 18px;}
+        .ai-table tr:last-child {border-bottom-right-radius: 18px;border-bottom-left-radius: 18px;}
+        .ai-table tr:last-child td:first-child {border-bottom-right-radius: 18px;}
+        .ai-table tr:last-child td:last-child {border-bottom-left-radius: 18px;}
 
         .controls {
             display: flex;
@@ -499,17 +521,17 @@
         }
         @media (prefers-color-scheme: dark) {
             .ai-table th, .ai-table td { 
-            	border: 1px solid #415c3b; /* خطوط روشن‌تر */
+                border-bottom: 1px solid #5f7959;
+                border-left: 1px solid #75956e;
             }
-            .ai-table th { 
-            	background-color: #3c5736ab; 
+            .ai-table thead { background: linear-gradient(-45deg, #299100, #008f5a); }
+            .ai-table tbody tr:nth-child(even) { 
+            	background-color: #effffc1c; 
             }
-            .ai-table tr:nth-child(even) { 
-            	background-color: #3e493b8f; 
+            .ai-table tbody tr:nth-child(odd) { 
+            	background-color: #484c4d26; /* یا رنگ اصلی بدنه */
             }
-            .ai-table tr:nth-child(odd) { 
-            	background-color: #222b2394; /* یا رنگ اصلی بدنه */
-            }
+            .ai-table tbody tr:hover { background-color: #ccedc336; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.302); }
         }
     </style>
 </head>
@@ -692,74 +714,96 @@
 
         const baseElements = [
             { n : 1, s : 'H', m: '1.008', c: 'non-metal', st: 'gas', name: 'هیدروژن', nameEng: 'Hydrogen', density: '$0.089 \\frac{\\text{g}}{\\text{L}}$', mp: '$-259^{\\circ}\\text{C}$', bp: '$-252^{\\circ}\\text{C}$', istops: 'پروتیوم (هیدروژن معمولی): $^{1}_{1}\\mathrm{H}$،<br> دوتریوم: $^{2}_{1}\\mathrm{H}$ یا $\\mathrm{D}$،<br> تریتیوم: $^{3}_{1}\\mathrm{H}$ یا $\\mathrm{T}$', RAtm: '$r_{\\text{covalent}}(\\mathrm{H}) \\approx 53\\text{pm}$', RvdW: '$r_{\\text{vdW}}(\\mathrm{H}) \\approx 120\\text{pm}$', elctrNeg: '2.20', OxN: '$+1$ و $-1$', alotrops: '$\\mathrm{H}_2$، $\\mathrm{H}_1$، $\\mathrm{H}_3^+$', discvrr: 'Henry Cavendish', discvrDate: '1766', naming: 'Antoine-Laurent de Lavoisier', block: 's', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Hydrogen_discharge_tube_cropped.jpg', 
-            d: `
-        <h2 class="text-2xl font-bold my-3">هیدروژن: سرآغاز هستی و سوخت آینده</h2>
-        <p>هیدروژن ($\\mathrm{H}$) نه‌تنها اولین و سبک‌ترین عنصر در جدول تناوبی است، بلکه به عنوان سنگ‌بنای ماده در جهان شناخته می‌شود. این عنصر که حدود ۱۳.۸ میلیارد سال پیش در جریان مهبانگ (Big Bang) پدید آمد، امروزه حدود $75\\%$ از جرم کل مواد باریونی کیهان را تشکیل می‌دهد. هیدروژن سوخت اصلی قلب ستارگان است که از طریق فرآیندهای گداخت، نور و گرمای لازم برای حیات را فراهم می‌کند.</p>
-        <h3 class="text-xl font-bold my-3">تاریخچۀ کشف</h3>
-        <p>اگرچه کیمیاگران از قرن‌ها پیش می‌دانستند که واکنش فلزات با اسیدها گازی اشتعال‌پذیر تولید می‌کند، اما اولین بار هنری کاوندیش در سال ۱۷۶۶ میلادی توانست هیدروژن را به عنوان یک ماده مجزا شناسایی کند. او نام آن را «هوای مشتعل» گذاشت. بعدها آنتوان لاووازیه نام آن را از ترکیب دو واژه یونانی <i>Hydro</i> (آب) و <i>Genes</i> (سازنده) به معنای «آب‌ساز» انتخاب کرد.</p>
-        <h3 class="text-xl font-bold my-3">اطلاعات بنیادین در جدول تناوبی</h3>
-        <div class="overflow-x-auto">
-            <table class="ai-table">
-                <thead>
-                    <tr>
-                        <th>ویژگی</th>
-                        <th>مقدار / توضیحات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>عدد اتمی ($Z$)</td><td>$1$</td></tr>
-                    <tr><td>جرم اتمی استاندارد</td><td>$1.008 \\text{ amu}$</td></tr>
-                    <tr><td>آرایش الکترونی</td><td>$1s^1$</td></tr>
-                    <tr><td>شعاع اتمی (وان‌دروالس)</td><td>$120 \\text{pm}$</td></tr>
-                    <tr><td>شعاع کووالانسی</td><td>$31 \\pm 5\\text{pm}$</td></tr>
-                    <tr><td>انرژی نخستین یونش</td><td>$1312.0 \\frac{\\text{kJ}}{\\text{mol}}$</td></tr>
-                    <tr><td>الکترونگاتیوی (مقیاس پاولینگ)</td><td>$2.20$</td></tr>
-                    <tr><td>نقطه ذوب</td><td>$-259.16 ^{\\circ}\\text{C}$</td></tr>
-                    <tr><td>نقطه جوش</td><td>$-252.87 ^{\\circ}\\text{C}$</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <h3 class="text-xl font-bold my-3">ویژگی‌های فیزیکی و شیمیایی گسترده</h3>
-        <p>هیدروژن در شرایط استاندارد ($\\text{STP}$) به صورت مولکول‌های دواتمی ($\\mathrm{H}_2$) یافت می‌شود. پیوند بین دو اتم هیدروژن یکی از قوی‌ترین پیوندهای کووالانسی یگانه است ($\\mathrm{H{-}H}$).</p>
-        <img src="https://parshavayealborz.com/wp-content/uploads/2022/03/%D9%85%D9%88%D9%84%DA%A9%D9%88%D9%84-%D9%87%DB%8C%D8%AF%D8%B1%D9%88%DA%98%D9%86.jpg" alt="مولکول $H_2$" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">مولکول $\\mathrm{H}_2$</p>
-        <h3 class="text-xl font-bold my-3">فیزیک پلاسما و طیف نوری</h3>
-        <p>در دماهای بسیار بالا یا تحت ولتاژهای شدید، هیدروژن الکترون خود را از دست داده و به حالت پلاسما در می‌آید. انتقال الکترون بین ترازهای انرژی در اتم هیدروژن باعث ایجاد طیف نشری خطی می‌شود که با فرمول ریدبرگ محاسبه می‌گردد:$$\\frac{1}{\\lambda} = R_H \\left( \\frac{1}{n_1^2} - \\frac{1}{n_2^2} \\right)$$ در این فرمول، $R_H$ ثابت ریدبرگ برای هیدروژن است. خطوط مرئی این طیف (سری بالمر) شامل رنگ‌های قرمز ($n=3 \\to 2$)، آبی-سبز ($4 \\to 2$) و بنفش ($5 \\to 2$) است که در مجموع ظاهری صورتی‌رنگ به گاز درخشان می‌دهند.</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Emission_spectrum-H.svg/2560px-Emission_spectrum-H.svg.png" alt="طیف نشری خطی هیدروژن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto">
-        <p class="text-sm text-center">طیف نشری خطی هیدروژن</p><br>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hydrogen_discharge_tube.jpg/2560px-Hydrogen_discharge_tube.jpg" alt="درخشش صورتی-بنفش هیدروژن در حالت پلاسما" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">درخشش صورتی-بنفش هیدروژن در حالت پلاسما</p>
-        <h3 class="text-xl font-bold my-3">ایزوتوپ‌ها و تفاوت‌های ساختاری </h3>
-        <p>هیدروژن تنها عنصری است که ایزوتوپ‌های آن به دلیل تفاوت فاحش در جرم، رفتارهای شیمیایی متفاوتی نشان می‌دهند (اثر ایزوتوپی):</p>
-        <ol style="list-style-type: persian;" class="list-inside">
-            <li>پروتیوم ($^1_1\\mathrm{H}$): فراوان‌ترین شکل هیدروژن ($99.98\\%$). هسته آن تنها از یک پروتون تشکیل شده است.</li>
-            <li>دوتریوم ($^2_1\\mathrm{H}$ یا $\\mathrm{D}$): معروف به هیدروژن سنگین. دارای یک پروتون و یک نوترون است. چگالی آب سنگین ($\\mathrm{D}_2\\mathrm{O}$) حدود $11\\%$ بیشتر از آب معمولی است و در رآکتورهای هسته‌ای به عنوان کندکننده نوترون عمل می‌کند.</li>
-            <li>تریتیوم ($^3_1\\mathrm{H}$ یا $\\mathrm{T}$): ایزوتوپ رادیواکتیو با نیمه‌عمر ۱۲.۳ سال. در هسته آن دو نوترون وجود دارد. از آن در نورافشان‌های ساعت و به عنوان سوخت در بمب‌های هیدروژنی استفاده می‌شود.</li>
-        </ol>
-        <h3 class="text-xl font-bold my-3">مکانیسم‌های تولید انرژی: گداخت هسته‌ای</h3>
-        <p>در مرکز ستارگان، فشار و دمای فوق‌العاده زیاد باعث می‌شود پروتون‌ها بر نیروی رانش الکترواستاتیکی غلبه کرده و با هم ادغام شوند. فرآیند اصلی، چرخه پروتون-پروتون است:</p>
-        <ol style="list-style-type: persian;" class="list-inside">
-            <li>دو پروتون با هم برخورد کرده و یک دوتریوم، یک پوزیترون و یک نوترینو تولید می‌کنند.</li>
-            <li>دوتریوم با پروتون دیگری برخورد کرده و هلیوم-۳ ($^3_2\\mathrm{He}$) تولید می‌کند.</li>
-            <li>نهایت، دو هسته هلیوم-۳ با هم برخورد کرده و هلیوم-۴ پایدار را می‌سازند.</li>
-        </ol>
-        <p>معادله کلی انرژی‌زا: $$4 \\ ^1_1\\mathrm{H} \\rightarrow \\ ^4_2\\mathrm{He} + 2e^+ + 2\\nu_e + 26.73 \\ \\text{MeV}$$ این انرژی معادل تبدیل بخشی از جرم به انرژی طبق فرمول معروف اینشتین ($E=mc^2$) است.</p>
-        <h3 class="text-xl font-bold my-3">کاربردها و نقش در اقتصاد آینده</h3>
-        <h4 class="text-lg font-semibold mt-4 mb-2">۱. اقتصاد هیدروژنی (سوخت پاک)</h4>
-        <p>هیدروژن به عنوان حامل انرژی در سلول‌های سوختی (Fuel Cells) استفاده می‌شود. در این سلول‌ها، واکنش شیمیایی مستقیماً به برق تبدیل شده و تنها خروجی آن بخار آب خالص است:$$2\\mathrm{H}_2(\\mathrm{g}) + \\mathrm{O}_2(\\mathrm{g}) \\rightarrow 2\\mathrm{H}_2\\mathrm{O}(\\mathrm{l}) + \\text{Energy}$$</p>
-        <h4 class="text-lg font-semibold mt-4 mb-2">۲. هیدروژنه کردن در صنایع غذایی</h4>
-        <p>برای تبدیل روغن‌های مایع گیاهی به چربی‌های جامد (مارگارین)، اتم‌های هیدروژن به پیوندهای دوگانه کربن-کربون اضافه می‌شوند.</p>
-        <h4 class="text-lg font-semibold mt-4 mb-2">۳. فرآیند هابر-بوش</h4>
-        <p>هیدروژن ماده اولیه حیاتی برای تولید آمونیاک است که پایه و اساس کودهای شیمیایی برای تأمین غذای جمعیت جهان محسوب می‌شود:$$\\mathrm{N}_2(\\mathrm{g}) + 3\\mathrm{H}_2(\\mathrm{g}) \\xrightarrow{\\mathrm{Fe}, \\Delta, P} 2\\mathrm{NH}_3(\\mathrm{g})$$</p>
-        <h3 class="text-xl font-bold my-3">ایمنی و چالش‌ها</h3>
-        <p>هیدروژن بسیار سبک است و به سرعت نشت می‌کند. همچنین به دلیل دامنه اشتعال‌پذیری وسیع در هوا ($4\\%$ تا $75\\%$)، نگهداری آن نیازمند مخازن فشار بالا و سیستم‌های تشخیص نشت پیشرفته است. یکی از پدیده‌های جالب، "تردی هیدروژنی" است که در آن نفوذ اتم‌های هیدروژن به داخل ساختار فلزات باعث شکننده شدن آن‌ها می‌شود.</p>
-        <h3 class="text-xl font-bold my-3">وضعیت منحصر به فرد در جدول تناوبی</h3>
-        <p>هیدروژن در هیچ دسته‌بندی استانداردی کاملاً نمی‌گنجد:</p>
-        <ul style="list-style-type: disc;" class="list-inside">
-            <li>مانند فلزات قلیایی (گروه ۱) دارای یک الکترون ظرفیت است و می‌تواند یون $\\mathrm{H}^+$ بسازد.</li>
-            <li>مانند هالوژن‌ها (گروه ۱۷) تنها به یک الکترون برای پر کردن لایه آخر نیاز دارد و می‌تواند یون $\\mathrm{H}^-$ (هیدرید) بسازد.</li>
-            <li>تحت فشار فوق‌العاده زیاد (مانند هسته سیاره مشتری)، هیدروژن می‌تواند به حالت فلزی در بیاید که دارای رسانایی الکتریکی بالاست.</li>
-        </ul>
-        <img src="https://bigbangpage.com/wp-content/uploads/2014/05/jupiterint-.jpg" alt="اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن</p><br>
-        <img src="https://cdn.nody.ir/files/2024/08/10/nody-%D8%B9%DA%A9%D8%B3-%D8%AA%D9%88%DB%8C-%D8%B3%DB%8C%D8%A7%D8%B1%D9%87-%D9%85%D8%B4%D8%AA%D8%B1%DB%8C-1723240576.jpg" alt="میدان مغناطیسی سیارۀ مشتری ناشی از هیدروژن فلزی موجود در هستۀ آن" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">میدان مغناطیسی سیارۀ مشتری ناشی از هیدروژن فلزی موجود در هستۀ آن</p>
+            d: `## هیدروژن: سرآغاز هستی و سوخت آینده 
+هیدروژن ($\\mathrm{H}$) نه‌تنها اولین و سبک‌ترین عنصر در جدول تناوبی است، بلکه به عنوان سنگ‌بنای ماده در جهان شناخته می‌شود. این عنصر که حدود ۱۳.۸ میلیارد سال پیش در جریان مهبانگ (Big Bang) پدید آمد، امروزه حدود $75\\%$ از جرم کل مواد باریونی کیهان را تشکیل می‌دهد. هیدروژن سوخت اصلی قلب ستارگان است که از طریق فرآیندهای گداخت، نور و گرمای لازم برای حیات را فراهم می‌کند.
+
+### تاریخچۀ کشف
+اگرچه کیمیاگران از قرن‌ها پیش می‌دانستند که واکنش فلزات با اسیدها گازی اشتعال‌پذیر تولید می‌کند، اما اولین بار هنری کاوندیش در سال ۱۷۶۶ میلادی توانست هیدروژن را به عنوان یک ماده مجزا شناسایی کند. او نام آن را «هوای مشتعل» گذاشت. بعدها آنتوان لاووازیه نام آن را از ترکیب دو واژه یونانی *Hydro* (آب) و *Genes* (سازنده) به معنای «آب‌ساز» انتخاب کرد.
+
+### اطلاعات بنیادین در جدول تناوبی
+
+| ویژگی | مقدار / توضیحات |
+| :--- | :--- |
+| عدد اتمی ($Z$) | $1$ |
+| جرم اتمی استاندارد | $1.008 \\text{ amu}$ |
+| آرایش الکترونی | $1s^1$ |
+| شعاع اتمی (وان‌دروالس) | $120 \\text{pm}$ |
+| شعاع کووالانسی | $31 \\pm 5\\text{pm}$ |
+| انرژی نخستین یونش | $1312.0 \\frac{\\text{kJ}}{\\text{mol}}$ |
+| الکترونگاتیوی (مقیاس پاولینگ) | $2.20$ |
+| نقطه ذوب | $-259.16 ^{\\circ}\\text{C}$ |
+| نقطه جوش | $-252.87 ^{\\circ}\\text{C}$ |
+
+### ویژگی‌های فیزیکی و شیمیایی گسترده 
+هیدروژن در شرایط استاندارد ($\\text{STP}$) به صورت مولکول‌های دواتمی ($\\mathrm{H}_2$) یافت می‌شود. پیوند بین دو اتم هیدروژن یکی از قوی‌ترین پیوندهای کووالانسی یگانه است ($\\mathrm{H{-}H}$).
+
+![مولکول $\\mathrm{H_2}$](https://parshavayealborz.com/wp-content/uploads/2022/03/%D9%85%D9%88%D9%84%DA%A9%D9%88%D9%84-%D9%87%DB%8C%D8%AF%D8%B1%D9%88%DA%98%D9%86.jpg "مولکول $H_2$")
+
+### فیزیک پلاسما و طیف نوری
+
+در دماهای بسیار بالا یا تحت ولتاژهای شدید، هیدروژن الکترون خود را از دست داده و به حالت پلاسما در می‌آید. انتقال الکترون بین ترازهای انرژی در اتم هیدروژن باعث ایجاد طیف نشری خطی می‌شود که با فرمول ریدبرگ محاسبه می‌گردد:
+
+$$\\frac{1}{\\lambda} = R_H \\left( \\frac{1}{n_1^2} - \\frac{1}{n_2^2} \\right)$$
+
+در این فرمول، $R_H$ ثابت ریدبرگ برای هیدروژن است. خطوط مرئی این طیف (سری بالمر) شامل رنگ‌های قرمز ($n=3 \\to 2$)، آبی-سبز ($4 \\to 2$) و بنفش ($5 \\to 2$) است که در مجموع ظاهری صورتی‌رنگ به گاز درخشان می‌دهند.
+
+![طیف نشری خطی هیدروژن](https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Emission_spectrum-H.svg/2560px-Emission_spectrum-H.svg.png "طیف نشری خطی هیدروژن")
+
+![درخشش صورتی-بنفش هیدروژن در حالت پلاسما](https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hydrogen_discharge_tube.jpg/2560px-Hydrogen_discharge_tube.jpg "درخشش صورتی-بنفش هیدروژن در حالت پلاسما")
+
+### ایزوتوپ‌ها و تفاوت‌های ساختاری 
+
+هیدروژن تنها عنصری است که ایزوتوپ‌های آن به دلیل تفاوت فاحش در جرم، رفتارهای شیمیایی متفاوتی نشان می‌دهند (اثر ایزوتوپی):
+
+1. پروتیوم ($^1_1\\mathrm{H}$): فراوان‌ترین شکل هیدروژن ($99.98\\%$). هسته آن تنها از یک پروتون تشکیل شده است.
+2. دوتریوم ($^2_1\\mathrm{H}$ یا $\\mathrm{D}$): معروف به هیدروژن سنگین. دارای یک پروتون و یک نوترون است. چگالی آب سنگین ($\\mathrm{D}_2\\mathrm{O}$) حدود $11\\%$ بیشتر از آب معمولی است و در رآکتورهای هسته‌ای به عنوان کندکننده نوترون عمل می‌کند.
+3. تریتیوم ($^3_1\\mathrm{H}$ یا $\\mathrm{T}$): ایزوتوپ رادیواکتیو با نیمه‌عمر ۱۲.۳ سال. در هسته آن دو نوترون وجود دارد. از آن در نورافشان‌های ساعت و به عنوان سوخت در بمب‌های هیدروژنی استفاده می‌شود.
+
+### مکانیسم‌های تولید انرژی: گداخت هسته‌ای
+
+در مرکز ستارگان، فشار و دمای فوق‌العاده زیاد باعث می‌شود پروتون‌ها بر نیروی رانش الکترواستاتیکی غلبه کرده و با هم ادغام شوند. فرآیند اصلی، چرخه پروتون-پروتون است:
+
+1. دو پروتون با هم برخورد کرده و یک دوتریوم، یک پوزیترون و یک نوترینو تولید می‌کنند.
+2. دوتریوم با پروتون دیگری برخورد کرده و هلیوم-۳ ($^3_2\\mathrm{He}$) تولید می‌کند.
+3. نهایت، دو هسته هلیوم-۳ با هم برخورد کرده و هلیوم-۴ پایدار را می‌سازند.
+
+معادله کلی انرژی‌زا: 
+
+$$4 \\ ^1_1\\mathrm{H} \\rightarrow \\ ^4_2\\mathrm{He} + 2e^+ + 2\\nu_e + 26.73 \\ \\text{MeV}$$
+
+این انرژی معادل تبدیل بخشی از جرم به انرژی طبق فرمول معروف اینشتین ($E=mc^2$) است.
+
+### کاربردها و نقش در اقتصاد آینده
+
+#### ۱. اقتصاد هیدروژنی (سوخت پاک)
+
+هیدروژن به عنوان حامل انرژی در سلول‌های سوختی (Fuel Cells) استفاده می‌شود. در این سلول‌ها، واکنش شیمیایی مستقیماً به برق تبدیل شده و تنها خروجی آن بخار آب خالص است:
+
+$$2\\mathrm{H}_2(\\mathrm{g}) + \\mathrm{O}_2(\\mathrm{g}) \\rightarrow 2\\mathrm{H}_2\\mathrm{O}(\\mathrm{l}) + \\text{Energy}$$
+
+#### ۲. هیدروژنه کردن در صنایع غذایی 
+برای تبدیل روغن‌های مایع گیاهی به چربی‌های جامد (مارگارین)، اتم‌های هیدروژن به پیوندهای دوگانه کربن-کربون اضافه می‌شوند.
+
+#### ۳. فرآیند هابر-بوش 
+هیدروژن ماده اولیه حیاتی برای تولید آمونیاک است که پایه و اساس کودهای شیمیایی برای تأمین غذای جمعیت جهان محسوب می‌شود:
+
+$$\\mathrm{N}_2(\\mathrm{g}) + 3\\mathrm{H}_2(\\mathrm{g}) \\xrightarrow{\\mathrm{Fe}, \\Delta, P} 2\\mathrm{NH}_3(\\mathrm{g})$$
+
+### ایمنی و چالش‌ها
+
+هیدروژن بسیار سبک است و به سرعت نشت می‌کند. همچنین به دلیل دامنه اشتعال‌پذیری وسیع در هوا ($4\\%$ تا $75\\%$)، نگهداری آن نیازمند مخازن فشار بالا و سیستم‌های تشخیص نشت پیشرفته است. یکی از پدیده‌های جالب، "تردی هیدروژنی" است که در آن نفوذ اتم‌های هیدروژن به داخل ساختار فلزات باعث شکننده شدن آن‌ها می‌شود.
+
+### وضعیت منحصر به فرد در جدول تناوبی
+
+هیدروژن در هیچ دسته‌بندی استانداردی کاملاً نمی‌گنجد:
+
+*   مانند فلزات قلیایی (گروه ۱) دارای یک الکترون ظرفیت است و می‌تواند یون $\\mathrm{H}^+$ بسازد.
+*   مانند هالوژن‌ها (گروه ۱۷) تنها به یک الکترون برای پر کردن لایه آخر نیاز دارد و می‌تواند یون $\\mathrm{H}^-$ (هیدرید) بسازد.
+*   تحت فشار فوق‌العاده زیاد (مانند هسته سیاره مشتری)، هیدروژن می‌تواند به حالت فلزی در بیاید که دارای رسانایی الکتریکی بالاست.
+
+![اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن](https://bigbangpage.com/wp-content/uploads/2014/05/jupiterint-.jpg "اجزای داخلی سیارۀ مشتری و جایگاه هیدروژن فلزی در آن")
+
+![میدان مغناطیسی سیارۀ عطارد ناشی از هیدروژن فلزی موجود در هستۀ آن](https://cdn.nody.ir/files/2024/08/10/nody-%D8%B9%DA%A9%D8%B3-%D8%AA%D9%88%DB%8C-%D8%B3%DB%8C%D8%A7%D8%B1%D9%87-%D9%85%D8%B4%D8%AA%D8%B1%DB%8C-1723240576.jpg "میدان مغناطیسی سیارۀ عطارد ناشی از هیدروژن فلزی موجود در هستۀ آن")
         ` },
             { n : 2, s : 'He', m: '4.0026', c: 'noble-gas', st: 'gas', name: 'هلیم', nameEng: 'Helium', density: '$0.178 \\frac{\\text{g}}{\\text{L}}$', mp: '$-272^{\\circ}\\text{C}$', bp: '$-268^{\\circ}\\text{C}$', istops: '$^3\\mathrm{He}, ^4\\mathrm{He}$', RAtm: '$31\\text{pm}$', RvdW: '$140\\text{pm}$', elctrNeg: '-', OxN: '0', alotrops: '-', discvrr: 'Pierre Janssen, Norman Lockyer', discvrDate: '1868', naming: 'Norman Lockyer', block: 's', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Helium_discharge_tube.jpg/1280px-Helium_discharge_tube.jpg', 
             d: 'گاز خنثی در بالن‌ها.' },
@@ -1333,7 +1377,7 @@
                 </div>
                 <div class="section-title" style="padding: 25px;">توضیحات</div>
                 <div class="description-box">
-                    ${el.desc}
+                    ${parseAndStyleResponse(el.desc)}
                 </div>
             `;
             if (el.ra) {
@@ -1492,10 +1536,244 @@
             animate();
         }
 
+        function escapeHtml(s) {
+            return s
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        /**
+         * تابع اصلی پردازش متن
+         */
+        function parseAndStyleResponse(text) {
+            let html = text;
+
+            // 1. استخراج و پردازش بلوک‌کوتیشن‌ها
+            // این تابع هم بلوک‌کوتیشن‌ها را پردازش می‌کند و هم متن‌های عادی را از لیست تبدیل می‌کند
+            html = processBlockquotesAndNormalLists(html);
+
+            // 2. پردازش جداول (Tables)
+            html = processTables(html);
+
+            // 3. پردازش هدرها، بولد، ایتالیک، تصاویر، خط افقی و کد
+            html = html
+                .replace(/^# (.*$)\n/gm, '<h2 class="text-3xl font-bold my-3">$1</h2>')
+                .replace(/^## (.*$)\n/gm, '<h3 class="text-2xl font-semibold mt-4 mb-2">$1</h3>')
+                .replace(/^### (.*$)\n/gm, '<h4 class="text-xl font-semibold mt-4 mb-2">$1</h4>')
+                .replace(/^#### (.*$)\n/gm, '<h5 class="text-lg font-semibold mt-4 mb-2">$1</h5>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<i>$1</i>')
+                .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">$1</p>')
+                .replace(/(?:^|\n)---(?:\r?\n|<br>|\n)(?:^|\n)/g, '<hr class="my-6 border-t-0 border-b border-[#e5ebe6] dark:border-[#353936]">')
+                .replace(/`([^`\n]+)`/g, (m, inlineCode) => {
+                    const escaped = inlineCode.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    return `<code class="inline-code px-1 rounded cursor-pointer" data-code="${escaped}">${escaped}</code>`;
+                });
+
+            // 4. تبدیل خطوط جدید به <br>
+            html = html.replace(/\n/g, '<br>');
+
+            // 5. پاکسازی نهایی (حذف <br> اضافی بعد از تگ‌های خاص)
+            html = html
+                .replace(/(<\/h3>)<br>/g, '$1')
+                .replace(/(<\/h2>)<br>/g, '$1')
+                .replace(/(<\/h4>)<br>/g, '$1')
+                .replace(/(<\/h5>)<br>/g, '$1')
+                .replace(/(<\/div>)<br>/g, '$1')
+                .replace(/(<\/blockquote>)<br><br>/g, '$1')
+                .replace(/(<\/blockquote>)<br>/g, '$1')
+                .replace(/(<\/hr>)<br>/g, '$1')
+                .replace(/<br><br>/g, '<br>')
+                .replace(/<\/ul><br>/g, '</ul>')
+                .replace(/<\/ol><br>/g, '</ol>');
+
+            return html;
+        }
+
+        /**
+         * تابع جدید: پردازش همزمان بلوک‌کوتیشن‌ها و لیست‌های عادی
+         */
+        function processBlockquotesAndNormalLists(text) {
+            // Regex برای پیدا کردن بلوک‌کوتیشن‌ها
+            const bqRegex = /(?:^|\n)>[^\n]*(?:\n>[^\n]*)*/g;
+            
+            let lastIndex = 0;
+            let result = '';
+            let match;
+
+            // حلقه برای پیدا کردن تمام بلوک‌کوتیشن‌ها
+            while ((match = bqRegex.exec(text)) !== null) {
+                // 1. متن قبل از این بلوک‌کوتیشن (متن عادی)
+                const normalTextBefore = text.slice(lastIndex, match.index);
+                
+                // پردازش لیست‌ها در متن عادی قبل از بلوک‌کوتیشن
+                if (normalTextBefore) {
+                    result += parseMarkdownLists(normalTextBefore);
+                }
+
+                // 2. پردازش محتوای بلوک‌کوتیشن
+                let bqContent = match[0].replace(/^(\n)?/, ''); // حذف newline ابتدایی
+                const cleanedBqLines = bqContent.split('\n').map(line => line.replace(/^>\s?/, ''));
+                const rawBqContent = cleanedBqLines.join('\n');
+                
+                // پردازش لیست‌ها و استایل‌های داخل بلوک‌کوتیشن
+                let processedBqContent = parseMarkdownLists(rawBqContent);
+                processedBqContent = processedBqContent
+                    .replace(/^# (.*$)\n/gm, '<h2 class="text-3xl font-bold my-3">$1</h2>')
+                    .replace(/^## (.*$)\n/gm, '<h3 class="text-2xl font-semibold mt-4 mb-2">$1</h3>')
+                    .replace(/^### (.*$)\n/gm, '<h4 class="text-xl font-semibold mt-4 mb-2">$1</h4>')
+                    .replace(/^#### (.*$)\n/gm, '<h5 class="text-lg font-semibold mt-4 mb-2">$1</h5>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<i>$1</i>')
+                    .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="my-2 rounded-lg shadow-md mx-auto max-w-full h-auto"><p class="text-sm text-center">$1</p>')
+                    .replace(/`([^`\n]+)`/g, (m, inlineCode) => {
+                        const escaped = inlineCode.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                        return `<code class="inline-code px-1 rounded cursor-pointer" data-code="${escaped}">${escaped}</code>`;
+                    })
+                    .replace(/\n/g, '<br>');
+
+                // پاکسازی <br> در داخل بلوک
+                processedBqContent = processedBqContent
+                    .replace(/(<\/h3>)<br>/g, '$1')
+                    .replace(/(<\/h2>)<br>/g, '$1')
+                    .replace(/(<\/h4>)<br>/g, '$1')
+                    .replace(/(<\/h5>)<br>/g, '$1')
+                    .replace(/<br><br>/g, '<br>')
+                    .replace(/<\/ul><br>/g, '</ul>')
+                    .replace(/<\/ol><br>/g, '</ol>');
+
+                result += `<blockquote class="my-3">${processedBqContent}</blockquote>`;
+                
+                lastIndex = bqRegex.lastIndex;
+            }
+
+            // 3. پردازش متن باقی‌مانده بعد از آخرین بلوک‌کوتیشن
+            if (lastIndex < text.length) {
+                const normalTextAfter = text.slice(lastIndex);
+                result += parseMarkdownLists(normalTextAfter);
+            }
+
+            return result;
+        }
+
+        /**
+         * تابع کمکی برای پردازش جداول
+         */
+        function processTables(text) {
+            const tableRegex = /((?:\|.*\|[ \t]*\r?\n)\|[ \t:.\-|]+\r?\n(?:\|.*\|[ \t]*\r?\n?)*)/g;
+            return text.replace(tableRegex, (table) => {
+                const rows = table.trim().split(/\r?\n/);
+                if (rows.length < 2) return table;
+                const separator = rows[1];
+                if (!/^(\|\s*[:\-]+\s*)+\|?$/.test(separator)) {
+                    return table;
+                }
+                const headerCells = rows[0].split('|').slice(1, -1).map(h => `<th>${h.trim()}</th>`).join('');
+                let body = '';
+                for(let i = 2; i < rows.length; i++) {
+                    const line = rows[i].trim();
+                    if (!line) continue;
+                    const cells = rows[i].split('|').slice(1, -1).map(c => `<td>${c.trim()}</td>`).join('');
+                    body += `<tr>${cells}</tr>`;
+                }
+                return `<div class="table-wrapper overflow-x-auto"><table class="ai-table"><thead><tr>${headerCells}</tr></thead><tbody>${body}</tbody></table></div>`;
+            });
+        }
+
+        /**
+         * تابع parseMarkdownLists
+         * این تابع لیست‌ها را در متنی که دیگر شامل > نیست پردازش می‌کند
+         */
+        function parseMarkdownLists(text) {
+            const lines = text.split('\n');
+            let result = '';
+            let stack = []; // نگه‌داری نوع لیست‌ها: 'ul' یا 'ol'
+
+            let liOpen = false;       // آیا الان داخل <li> هستیم؟
+            let liLevel = -1;         // سطح <li> باز
+
+            function openList(type) {
+                stack.push(type);
+                result += `<${type}>`;
+            }
+
+            function closeList() {
+                const type = stack.pop();
+                result += `</${type}>`;
+            }
+
+            function closeLiIfOpen() {
+                if (liOpen) {
+                    result += `</li>`;
+                    liOpen = false;
+                    liLevel = -1;
+                }
+            }
+
+            function closeToLevel(level) {
+                if (liOpen && stack.length > level) closeLiIfOpen();
+                while (stack.length > level) closeList();
+            }
+
+            for (let line of lines) {
+                // Regex ساده برای لیست‌های استاندارد (چون > ها قبلاً حذف شده‌اند)
+                const listMatch = line.match(/^(\s*)([-*]|\d+[\.\)]) (.*)$/);
+
+                if (!listMatch) {
+                    // ✅ بازگرداندن منطق تشخیص توضیح زیر آیتم (Continuation)
+                    // اگر خط با فاصله شروع شود و داخل لیست باشیم، احتمالاً توضیح آیتم قبلی است
+                    // در متون تمیز شده (داخل بلوک‌کوتیشن)، دیگر > نداریم، پس فقط فاصله را چک می‌کنیم
+                    const contMatch = line.match(/^(\s+)(.*)$/);
+                    if (contMatch && liOpen) {
+                        const cont = contMatch[2].trim();
+                        if (cont.length) {
+                            result += `<p>${escapeHtml(cont)}</p>`;
+                        }
+                        continue;
+                    }
+                    // اگر خط لیست نیست
+                    closeLiIfOpen();
+                    closeToLevel(0);
+                    result += escapeHtml(line) + '\n';
+                    continue;
+                }
+
+                const indent = listMatch[1].length;
+                const marker = listMatch[2];
+                const content = listMatch[3];
+                const level = Math.floor(indent / 4);
+                const type = /^\d+[\.\)]/.test(marker) ? 'ol' : 'ul';
+
+                if (liOpen && level !== liLevel) closeLiIfOpen();
+
+                if (level > stack.length - 1) {
+                    openList(type);
+                } else if (level < stack.length - 1) {
+                    closeLiIfOpen();
+                    closeToLevel(level + 1);
+                }
+
+                if (stack[stack.length - 1] !== type) {
+                    closeLiIfOpen();
+                    closeList();
+                    openList(type);
+                }
+
+                closeLiIfOpen();
+                result += `<li>${escapeHtml(content)}`;
+                liOpen = true;
+                liLevel = level;
+            }
+
+            closeLiIfOpen();
+            closeToLevel(0);
+            return result;
+        }
+
         // شروع برنامه
         renderTable();
 
     </script>
 </body>
-
 </html>
